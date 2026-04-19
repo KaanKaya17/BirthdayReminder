@@ -109,6 +109,22 @@
                 android:textColor="#CCFFFFFF"
                 android:textSize="14sp" />
 
+            <!-- Zodiac Chip -->
+            <TextView
+                android:id="@+id/tvZodiac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvDate"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_zodiac_chip"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="♈ Koç"
+                tools:visibility="visible" />
+
         </RelativeLayout>
 
         <!-- Info Cards -->

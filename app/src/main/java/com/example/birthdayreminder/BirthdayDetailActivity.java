@@ -75,6 +75,15 @@ public class BirthdayDetailActivity extends AppCompatActivity {
         avatarDrawable.setColor(color);
         binding.avatarBackground.setBackground(avatarDrawable);
 
+        // Zodiac Sign
+        int zodiacStrId = BirthdayUtils.getZodiacStringId(birthday.getDay(), birthday.getMonth());
+        if (zodiacStrId != R.string.unknown_age) {
+            binding.tvZodiac.setText(getString(zodiacStrId));
+            binding.tvZodiac.setVisibility(View.VISIBLE);
+        } else {
+            binding.tvZodiac.setVisibility(View.GONE);
+        }
+
         // Age
         int currentAge = BirthdayUtils.calculateCurrentAge(birthday.getDay(), birthday.getMonth(), birthday.getYear());
         int nextAge = BirthdayUtils.calculateNextAge(birthday.getDay(), birthday.getMonth(), birthday.getYear());

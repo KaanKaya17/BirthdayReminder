@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
+import com.example.birthdayreminder.R;
+
 public class BirthdayUtils {
 
     /**
@@ -115,5 +117,24 @@ public class BirthdayUtils {
             return ("" + parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase(Locale.getDefault());
         }
         return ("" + parts[0].charAt(0)).toUpperCase(Locale.getDefault());
+    }
+
+    /**
+     * Get Zodiac sign string resource ID based on birth day and month.
+     */
+    public static int getZodiacStringId(int day, int month) {
+        if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return R.string.zodiac_aries;
+        if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return R.string.zodiac_taurus;
+        if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) return R.string.zodiac_gemini;
+        if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) return R.string.zodiac_cancer;
+        if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return R.string.zodiac_leo;
+        if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return R.string.zodiac_virgo;
+        if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) return R.string.zodiac_libra;
+        if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) return R.string.zodiac_scorpio;
+        if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return R.string.zodiac_sagittarius;
+        if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return R.string.zodiac_capricorn;
+        if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return R.string.zodiac_aquarius;
+        if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return R.string.zodiac_pisces;
+        return R.string.unknown_age; // Fallback
     }
 }
