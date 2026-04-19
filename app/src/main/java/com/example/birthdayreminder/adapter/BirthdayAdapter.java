@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.birthdayreminder.R;
 import com.example.birthdayreminder.data.Birthday;
+import com.example.birthdayreminder.databinding.ItemBirthdayBinding;
 import com.example.birthdayreminder.util.BirthdayUtils;
 
 import java.util.ArrayList;
@@ -32,9 +33,9 @@ public class BirthdayAdapter extends RecyclerView.Adapter<BirthdayAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_birthday, parent, false);
-        return new ViewHolder(view);
+        ItemBirthdayBinding binding = ItemBirthdayBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -58,21 +59,13 @@ public class BirthdayAdapter extends RecyclerView.Adapter<BirthdayAdapter.ViewHo
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private final View avatarBackground;
-        private final TextView tvInitials;
-        private final TextView tvName;
-        private final TextView tvDate;
-        private final TextView tvDaysRemaining;
+        private final ItemBirthdayBinding binding;
 
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            avatarBackground = itemView.findViewById(R.id.avatarBackground);
-            tvInitials = itemView.findViewById(R.id.tvInitials);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvDate = itemView.findViewById(R.id.tvDate);
-            tvDaysRemaining = itemView.findViewById(R.id.tvDaysRemaining);
+        ViewHolder(ItemBirthdayBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
 
-            itemView.setOnClickListener(v -> {
+            binding.getRoot().setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && listener != null) {
                     listener.onBirthdayClick(birthdays.get(pos));
@@ -81,34 +74,34 @@ public class BirthdayAdapter extends RecyclerView.Adapter<BirthdayAdapter.ViewHo
         }
 
         void bind(Birthday birthday) {
-            tvName.setText(birthday.getName());
-            tvDate.setText(BirthdayUtils.formatDate(birthday.getDay(), birthday.getMonth(), birthday.getYear()));
-            tvInitials.setText(BirthdayUtils.getInitials(birthday.getName()));
+            binding.tvName.setText(birthday.getName());
+            binding.tvDate.setText(BirthdayUtils.formatDate(birthday.getDay(), birthday.getMonth(), birthday.getYear()));
+            binding.tvInitials.setText(BirthdayUtils.getInitials(birthday.getName()));
 
             // Avatar color
             int color = BirthdayUtils.getAvatarColor(birthday.getName());
             GradientDrawable avatarDrawable = new GradientDrawable();
             avatarDrawable.setShape(GradientDrawable.OVAL);
             avatarDrawable.setColor(color);
-            avatarBackground.setBackground(avatarDrawable);
+            binding.avatarBackground.setBackground(avatarDrawable);
 
             // Days remaining badge
             long days = BirthdayUtils.daysUntilNextBirthday(birthday.getDay(), birthday.getMonth());
-            tvDaysRemaining.setText(BirthdayUtils.formatDaysRemaining(days));
+            binding.tvDaysRemaining.setText(BirthdayUtils.formatDaysRemaining(days));
 
             // Badge color based on proximity
             GradientDrawable badgeDrawable = new GradientDrawable();
             badgeDrawable.setCornerRadius(100f);
             if (days == 0) {
-                badgeDrawable.setColor(itemView.getContext().getColor(R.color.today_badge));
+                badgeDrawable.setColor(binding.getRoot().getContext().getColor(R.color.today_badge));
             } else if (days <= 7) {
-                badgeDrawable.setColor(itemView.getContext().getColor(R.color.secondary));
+                badgeDrawable.setColor(binding.getRoot().getContext().getColor(R.color.secondary));
             } else if (days <= 30) {
-                badgeDrawable.setColor(itemView.getContext().getColor(R.color.soon_badge));
+                badgeDrawable.setColor(binding.getRoot().getContext().getColor(R.color.soon_badge));
             } else {
-                badgeDrawable.setColor(itemView.getContext().getColor(R.color.later_badge));
+                badgeDrawable.setColor(binding.getRoot().getContext().getColor(R.color.later_badge));
             }
-            tvDaysRemaining.setBackground(badgeDrawable);
+            binding.tvDaysRemaining.setBackground(badgeDrawable);
         }
     }
 }

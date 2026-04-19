@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.birthdayreminder.data.Birthday;
+import com.example.birthdayreminder.databinding.ActivityAddEditBirthdayBinding;
 import com.example.birthdayreminder.notification.BirthdayAlarmScheduler;
 import com.example.birthdayreminder.util.BirthdayUtils;
 import com.example.birthdayreminder.viewmodel.BirthdayViewModel;
@@ -29,14 +30,7 @@ import java.util.concurrent.Executors;
 
 public class AddEditBirthdayActivity extends AppCompatActivity {
 
-    private TextInputEditText etName, etDate, etNotes;
-    private TextInputLayout nameInputLayout, dateInputLayout;
-    private MaterialSwitch switchNotification;
-    private MaterialButton btnSave;
-    private ImageButton btnBack;
-    private TextView tvTitle, tvAvatarInitial;
-    private View avatarBackground;
-
+    private ActivityAddEditBirthdayBinding binding;
     private BirthdayViewModel viewModel;
 
     private int selectedDay = 0, selectedMonth = 0, selectedYear = 0;
@@ -46,26 +40,12 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_edit_birthday);
+        binding = ActivityAddEditBirthdayBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        initViews();
         setupViewModel();
         checkEditMode();
         setupListeners();
-    }
-
-    private void initViews() {
-        etName = findViewById(R.id.etName);
-        etDate = findViewById(R.id.etDate);
-        etNotes = findViewById(R.id.etNotes);
-        nameInputLayout = findViewById(R.id.nameInputLayout);
-        dateInputLayout = findViewById(R.id.dateInputLayout);
-        switchNotification = findViewById(R.id.switchNotification);
-        btnSave = findViewById(R.id.btnSave);
-        btnBack = findViewById(R.id.btnBack);
-        tvTitle = findViewById(R.id.tvTitle);
-        tvAvatarInitial = findViewById(R.id.tvAvatarInitial);
-        avatarBackground = findViewById(R.id.avatarBackground);
     }
 
     private void setupViewModel() {
@@ -76,7 +56,7 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
         editBirthdayId = getIntent().getIntExtra("birthday_id", -1);
         if (editBirthdayId != -1) {
             isEditMode = true;
-            tvTitle.setText(R.string.edit_birthday);
+            binding.tvTitle.setText(R.string.edit_birthday);
             loadBirthdayData();
         }
     }
@@ -86,13 +66,13 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
             Birthday birthday = viewModel.getById(editBirthdayId);
             if (birthday != null) {
                 runOnUiThread(() -> {
-                    etName.setText(birthday.getName());
+                    binding.etName.setText(birthday.getName());
                     selectedDay = birthday.getDay();
                     selectedMonth = birthday.getMonth();
                     selectedYear = birthday.getYear();
-                    etDate.setText(BirthdayUtils.formatDate(selectedDay, selectedMonth, selectedYear));
-                    etNotes.setText(birthday.getNotes());
-                    switchNotification.setChecked(birthday.isNotifyEnabled());
+                    binding.etDate.setText(BirthdayUtils.formatDate(selectedDay, selectedMonth, selectedYear));
+                    binding.etNotes.setText(birthday.getNotes());
+                    binding.switchNotification.setChecked(birthday.isNotifyEnabled());
                     updateAvatar(birthday.getName());
                 });
             }
@@ -100,21 +80,21 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
+        binding.btnBack.setOnClickListener(v -> finish());
 
-        etDate.setOnClickListener(v -> showDatePicker());
+        binding.etDate.setOnClickListener(v -> showDatePicker());
 
-        btnSave.setOnClickListener(v -> saveBirthday());
+        binding.btnSave.setOnClickListener(v -> saveBirthday());
 
         // Live avatar update as user types name
-        etName.addTextChangedListener(new TextWatcher() {
+        binding.etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 updateAvatar(s.toString());
-                nameInputLayout.setError(null);
+                binding.nameInputLayout.setError(null);
             }
 
             @Override
@@ -124,18 +104,18 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
 
     private void updateAvatar(String name) {
         if (name == null || name.trim().isEmpty()) {
-            tvAvatarInitial.setText("?");
+            binding.tvAvatarInitial.setText("?");
             GradientDrawable drawable = new GradientDrawable();
             drawable.setShape(GradientDrawable.OVAL);
             drawable.setColor(getColor(R.color.later_badge));
-            avatarBackground.setBackground(drawable);
+            binding.avatarBackground.setBackground(drawable);
         } else {
-            tvAvatarInitial.setText(BirthdayUtils.getInitials(name));
+            binding.tvAvatarInitial.setText(BirthdayUtils.getInitials(name));
             int color = BirthdayUtils.getAvatarColor(name);
             GradientDrawable drawable = new GradientDrawable();
             drawable.setShape(GradientDrawable.OVAL);
             drawable.setColor(color);
-            avatarBackground.setBackground(drawable);
+            binding.avatarBackground.setBackground(drawable);
         }
     }
 
@@ -151,25 +131,25 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
             selectedDay = date.getDayOfMonth();
             selectedMonth = date.getMonthValue();
             selectedYear = date.getYear();
-            etDate.setText(BirthdayUtils.formatDate(selectedDay, selectedMonth, selectedYear));
-            dateInputLayout.setError(null);
+            binding.etDate.setText(BirthdayUtils.formatDate(selectedDay, selectedMonth, selectedYear));
+            binding.dateInputLayout.setError(null);
         });
 
         datePicker.show(getSupportFragmentManager(), "DATE_PICKER");
     }
 
     private void saveBirthday() {
-        String name = etName.getText() != null ? etName.getText().toString().trim() : "";
-        String notes = etNotes.getText() != null ? etNotes.getText().toString().trim() : "";
-        boolean notify = switchNotification.isChecked();
+        String name = binding.etName.getText() != null ? binding.etName.getText().toString().trim() : "";
+        String notes = binding.etNotes.getText() != null ? binding.etNotes.getText().toString().trim() : "";
+        boolean notify = binding.switchNotification.isChecked();
 
         // Validation
         if (name.isEmpty()) {
-            nameInputLayout.setError(getString(R.string.name_required));
+            binding.nameInputLayout.setError(getString(R.string.name_required));
             return;
         }
         if (selectedDay == 0) {
-            dateInputLayout.setError(getString(R.string.date_required));
+            binding.dateInputLayout.setError(getString(R.string.date_required));
             return;
         }
 

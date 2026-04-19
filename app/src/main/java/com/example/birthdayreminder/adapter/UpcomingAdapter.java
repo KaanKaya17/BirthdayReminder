@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.birthdayreminder.R;
 import com.example.birthdayreminder.data.Birthday;
+import com.example.birthdayreminder.databinding.ItemUpcomingBirthdayBinding;
 import com.example.birthdayreminder.util.BirthdayUtils;
 
 import java.util.ArrayList;
@@ -32,9 +33,9 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_upcoming_birthday, parent, false);
-        return new ViewHolder(view);
+        ItemUpcomingBirthdayBinding binding = ItemUpcomingBirthdayBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -54,21 +55,13 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private final View avatarBackground;
-        private final TextView tvInitials;
-        private final TextView tvName;
-        private final TextView tvDate;
-        private final TextView tvDaysRemaining;
+        private final ItemUpcomingBirthdayBinding binding;
 
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            avatarBackground = itemView.findViewById(R.id.avatarBackground);
-            tvInitials = itemView.findViewById(R.id.tvInitials);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvDate = itemView.findViewById(R.id.tvDate);
-            tvDaysRemaining = itemView.findViewById(R.id.tvDaysRemaining);
+        ViewHolder(ItemUpcomingBirthdayBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
 
-            itemView.setOnClickListener(v -> {
+            binding.getRoot().setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && listener != null) {
                     listener.onUpcomingClick(birthdays.get(pos));
@@ -77,18 +70,18 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
         }
 
         void bind(Birthday birthday) {
-            tvName.setText(birthday.getName());
-            tvDate.setText(BirthdayUtils.formatDate(birthday.getDay(), birthday.getMonth(), 0));
-            tvInitials.setText(BirthdayUtils.getInitials(birthday.getName()));
+            binding.tvName.setText(birthday.getName());
+            binding.tvDate.setText(BirthdayUtils.formatDate(birthday.getDay(), birthday.getMonth(), 0));
+            binding.tvInitials.setText(BirthdayUtils.getInitials(birthday.getName()));
 
             int color = BirthdayUtils.getAvatarColor(birthday.getName());
             GradientDrawable avatarDrawable = new GradientDrawable();
             avatarDrawable.setShape(GradientDrawable.OVAL);
             avatarDrawable.setColor(color);
-            avatarBackground.setBackground(avatarDrawable);
+            binding.avatarBackground.setBackground(avatarDrawable);
 
             long days = BirthdayUtils.daysUntilNextBirthday(birthday.getDay(), birthday.getMonth());
-            tvDaysRemaining.setText(BirthdayUtils.formatDaysRemaining(days));
+            binding.tvDaysRemaining.setText(BirthdayUtils.formatDaysRemaining(days));
         }
     }
 }
