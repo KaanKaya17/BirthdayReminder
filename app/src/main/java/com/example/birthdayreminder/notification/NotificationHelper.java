@@ -31,7 +31,7 @@ public class NotificationHelper {
     }
 
     public static void showBirthdayNotification(Context context, int birthdayId, String name,
-                                                  boolean isToday) {
+                                                  int daysBefore) {
         createNotificationChannel(context);
 
         Intent intent = new Intent(context, BirthdayDetailActivity.class);
@@ -43,12 +43,15 @@ public class NotificationHelper {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         String title, text;
-        if (isToday) {
+        if (daysBefore == 0) {
             title = context.getString(R.string.notification_today_title);
             text = context.getString(R.string.notification_today_text, name);
-        } else {
+        } else if (daysBefore == 1) {
             title = context.getString(R.string.notification_tomorrow_title);
             text = context.getString(R.string.notification_tomorrow_text, name);
+        } else {
+            title = context.getString(R.string.notification_days_before_title);
+            text = context.getString(R.string.notification_days_before_text, name, daysBefore);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
@@ -66,3 +69,4 @@ public class NotificationHelper {
         }
     }
 }
+

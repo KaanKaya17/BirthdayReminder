@@ -16,6 +16,9 @@ public class Birthday {
     private String notes;
     private String photoUri;
     private boolean notifyEnabled;
+    private int notifyDaysBefore;  // 0=same day, 1=1 day before, 2=2 days before, 7=1 week before
+    private int notifyHour;        // 0-23
+    private int notifyMinute;      // 0-59
     private long createdAt;
 
     public Birthday(String name, int day, int month, int year, String notes,
@@ -27,6 +30,9 @@ public class Birthday {
         this.notes = notes;
         this.photoUri = photoUri;
         this.notifyEnabled = notifyEnabled;
+        this.notifyDaysBefore = 1;  // default: 1 day before
+        this.notifyHour = 9;        // default: 09:00
+        this.notifyMinute = 0;
         this.createdAt = createdAt;
     }
 
@@ -39,6 +45,9 @@ public class Birthday {
     public String getNotes() { return notes; }
     public String getPhotoUri() { return photoUri; }
     public boolean isNotifyEnabled() { return notifyEnabled; }
+    public int getNotifyDaysBefore() { return notifyDaysBefore; }
+    public int getNotifyHour() { return notifyHour; }
+    public int getNotifyMinute() { return notifyMinute; }
     public long getCreatedAt() { return createdAt; }
 
     // Setters
@@ -50,5 +59,8 @@ public class Birthday {
     public void setNotes(String notes) { this.notes = notes; }
     public void setPhotoUri(String photoUri) { this.photoUri = photoUri; }
     public void setNotifyEnabled(boolean notifyEnabled) { this.notifyEnabled = notifyEnabled; }
+    public void setNotifyDaysBefore(int notifyDaysBefore) { this.notifyDaysBefore = notifyDaysBefore; }
+    public void setNotifyHour(int notifyHour) { this.notifyHour = notifyHour; }
+    public void setNotifyMinute(int notifyMinute) { this.notifyMinute = notifyMinute; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 }

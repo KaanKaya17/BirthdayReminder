@@ -49,6 +49,16 @@
     <string name="notification_today_text">Bugün %s\'ın doğum günü! Kutlamayı unutmayın.</string>
     <string name="notification_tomorrow_title">🎉 Yarın Doğum Günü!</string>
     <string name="notification_tomorrow_text">Yarın %s\'ın doğum günü. Hazırlıklarınızı yapın!</string>
+    <string name="notification_days_before_title">🎈 Doğum Günü Yaklaşıyor!</string>
+    <string name="notification_days_before_text">%1$s\'ın doğum gününe %2$d gün kaldı!</string>
+
+    <!-- Notification Settings -->
+    <string name="notify_timing_label">Hatırlatma Zamanı</string>
+    <string name="notify_time_label">Bildirim Saati</string>
+    <string name="notify_same_day">Aynı gün</string>
+    <string name="notify_1_day_before">1 gün önce</string>
+    <string name="notify_2_days_before">2 gün önce</string>
+    <string name="notify_1_week_before">1 hafta önce</string>
 
     <!-- General -->
     <string name="unknown_age">Yaş bilinmiyor</string>

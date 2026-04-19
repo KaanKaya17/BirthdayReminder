@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,15 +16,14 @@ import com.example.birthdayreminder.databinding.ActivityAddEditBirthdayBinding;
 import com.example.birthdayreminder.notification.BirthdayAlarmScheduler;
 import com.example.birthdayreminder.util.BirthdayUtils;
 import com.example.birthdayreminder.viewmodel.BirthdayViewModel;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.materialswitch.MaterialSwitch;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 
 public class AddEditBirthdayActivity extends AppCompatActivity {
@@ -37,6 +35,14 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
     private int editBirthdayId = -1;
     private boolean isEditMode = false;
 
+    // Notification settings
+    private int notifyDaysBefore = 1;
+    private int notifyHour = 9;
+    private int notifyMinute = 0;
+
+    // Mapping: dropdown index -> days before value
+    private final int[] daysBeforeValues = {0, 1, 2, 7};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +50,42 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setupViewModel();
+        setupNotificationSettings();
         checkEditMode();
         setupListeners();
     }
 
     private void setupViewModel() {
         viewModel = new ViewModelProvider(this).get(BirthdayViewModel.class);
+    }
+
+    private void setupNotificationSettings() {
+        // Setup timing dropdown
+        String[] timingOptions = {
+                getString(R.string.notify_same_day),
+                getString(R.string.notify_1_day_before),
+                getString(R.string.notify_2_days_before),
+                getString(R.string.notify_1_week_before)
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_dropdown_item_1line, timingOptions);
+        binding.actvNotifyTiming.setAdapter(adapter);
+        binding.actvNotifyTiming.setText(timingOptions[1], false); // default: 1 gün önce
+
+        binding.actvNotifyTiming.setOnItemClickListener((parent, view, position, id) -> {
+            notifyDaysBefore = daysBeforeValues[position];
+        });
+
+        // Setup time picker click
+        binding.etNotifyTime.setOnClickListener(v -> showTimePicker());
+
+        // Toggle notification settings visibility
+        binding.switchNotification.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            binding.notificationSettingsLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
+
+        // Update initial time display
+        updateTimeDisplay();
     }
 
     private void checkEditMode() {
@@ -73,10 +109,38 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
                     binding.etDate.setText(BirthdayUtils.formatDate(selectedDay, selectedMonth, selectedYear));
                     binding.etNotes.setText(birthday.getNotes());
                     binding.switchNotification.setChecked(birthday.isNotifyEnabled());
+
+                    // Load notification settings
+                    notifyDaysBefore = birthday.getNotifyDaysBefore();
+                    notifyHour = birthday.getNotifyHour();
+                    notifyMinute = birthday.getNotifyMinute();
+
+                    // Set dropdown to correct value
+                    String[] timingOptions = {
+                            getString(R.string.notify_same_day),
+                            getString(R.string.notify_1_day_before),
+                            getString(R.string.notify_2_days_before),
+                            getString(R.string.notify_1_week_before)
+                    };
+                    int dropdownIndex = getDropdownIndex(notifyDaysBefore);
+                    binding.actvNotifyTiming.setText(timingOptions[dropdownIndex], false);
+
+                    updateTimeDisplay();
                     updateAvatar(birthday.getName());
+
+                    // Toggle settings visibility based on switch state
+                    binding.notificationSettingsLayout.setVisibility(
+                            birthday.isNotifyEnabled() ? View.VISIBLE : View.GONE);
                 });
             }
         });
+    }
+
+    private int getDropdownIndex(int daysBefore) {
+        for (int i = 0; i < daysBeforeValues.length; i++) {
+            if (daysBeforeValues[i] == daysBefore) return i;
+        }
+        return 1; // default: 1 gün önce
     }
 
     private void setupListeners() {
@@ -138,6 +202,28 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
         datePicker.show(getSupportFragmentManager(), "DATE_PICKER");
     }
 
+    private void showTimePicker() {
+        MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(notifyHour)
+                .setMinute(notifyMinute)
+                .setTitleText(getString(R.string.notify_time_label))
+                .build();
+
+        timePicker.addOnPositiveButtonClickListener(v -> {
+            notifyHour = timePicker.getHour();
+            notifyMinute = timePicker.getMinute();
+            updateTimeDisplay();
+        });
+
+        timePicker.show(getSupportFragmentManager(), "TIME_PICKER");
+    }
+
+    private void updateTimeDisplay() {
+        String timeText = String.format(Locale.getDefault(), "%02d:%02d", notifyHour, notifyMinute);
+        binding.etNotifyTime.setText(timeText);
+    }
+
     private void saveBirthday() {
         String name = binding.etName.getText() != null ? binding.etName.getText().toString().trim() : "";
         String notes = binding.etNotes.getText() != null ? binding.etNotes.getText().toString().trim() : "";
@@ -163,6 +249,9 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
                     birthday.setYear(selectedYear);
                     birthday.setNotes(notes);
                     birthday.setNotifyEnabled(notify);
+                    birthday.setNotifyDaysBefore(notifyDaysBefore);
+                    birthday.setNotifyHour(notifyHour);
+                    birthday.setNotifyMinute(notifyMinute);
                     viewModel.update(birthday);
 
                     // Schedule or cancel alarm
@@ -182,6 +271,9 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
         } else {
             Birthday birthday = new Birthday(name, selectedDay, selectedMonth, selectedYear,
                     notes, null, notify, System.currentTimeMillis());
+            birthday.setNotifyDaysBefore(notifyDaysBefore);
+            birthday.setNotifyHour(notifyHour);
+            birthday.setNotifyMinute(notifyMinute);
 
             viewModel.insert(birthday, id -> {
                 birthday.setId(id);
@@ -197,3 +289,4 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
         }
     }
 }
+
