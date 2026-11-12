@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.birthdayreminder.BirthdayDetailActivity;
 import com.example.birthdayreminder.R;
+import com.example.birthdayreminder.util.BirthdayUtils;
 
 public final class NotificationHelper {
     public static final String CHANNEL_ID = "birthday_reminders";
@@ -26,9 +27,10 @@ public final class NotificationHelper {
     }
 
     public static void createNotificationChannel(Context context) {
+        Context display = BirthdayUtils.applicationLanguageContext(context);
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                context.getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH);
-        channel.setDescription(context.getString(R.string.notification_channel_desc));
+                display.getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription(display.getString(R.string.notification_channel_desc));
         channel.enableVibration(true);
         manager(context).createNotificationChannel(channel);
     }
@@ -64,6 +66,7 @@ public final class NotificationHelper {
 
     private static void showBirthdayNotification(Context context, int id, String name, int daysBefore, int year,
                                                  boolean snoozed) {
+        Context display = BirthdayUtils.applicationLanguageContext(context);
         Intent detail = new Intent(context, BirthdayDetailActivity.class).putExtra("birthday_id", id);
         PendingIntent open = PendingIntent.getActivity(context, id, detail,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
@@ -82,23 +85,23 @@ public final class NotificationHelper {
         String text;
         if (snoozed) {
             title = R.string.snooze_notification_title;
-            text = context.getString(R.string.snooze_notification_body, name);
+            text = display.getString(R.string.snooze_notification_body, name);
         } else if (daysBefore == 0) {
             title = R.string.notification_today_title;
-            text = context.getString(R.string.notification_today_text, name);
+            text = display.getString(R.string.notification_today_text, name);
         } else if (daysBefore == 1) {
             title = R.string.notification_tomorrow_title;
-            text = context.getString(R.string.notification_tomorrow_text, name);
+            text = display.getString(R.string.notification_tomorrow_text, name);
         } else {
             title = R.string.notification_days_before_title;
-            text = context.getString(R.string.notification_days_before_text, name, daysBefore);
+            text = display.getString(R.string.notification_days_before_text, name, daysBefore);
         }
 
-        post(context, TAG, id, builder(context, title, text)
+        post(context, TAG, id, builder(display, title, text)
                 .setContentIntent(open)
-                .addAction(R.drawable.ic_notification, context.getString(R.string.snooze_one_hour), snooze)
-                .addAction(R.drawable.ic_check, context.getString(R.string.mark_celebrated), mark)
-                .addAction(R.drawable.ic_message, context.getString(R.string.compose_message), compose));
+                .addAction(R.drawable.ic_notification, display.getString(R.string.snooze_one_hour), snooze)
+                .addAction(R.drawable.ic_check, display.getString(R.string.mark_celebrated), mark)
+                .addAction(R.drawable.ic_message, display.getString(R.string.compose_message), compose));
     }
 
     public static void cancel(Context context, int id) {

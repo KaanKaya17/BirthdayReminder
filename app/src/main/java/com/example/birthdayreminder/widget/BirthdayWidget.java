@@ -45,6 +45,7 @@ public class BirthdayWidget extends AppWidgetProvider {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         ComponentName provider = new ComponentName(context, BirthdayWidget.class);
         if (manager.getAppWidgetIds(provider).length == 0) return;
+        Context display = BirthdayUtils.applicationLanguageContext(context);
 
         LocalDate today = LocalDate.now();
         List<Birthday> upcoming = BirthdayDatabase.getDatabase(context).birthdayDao().getAllBirthdaysSync()
@@ -55,8 +56,8 @@ public class BirthdayWidget extends AppWidgetProvider {
                 .collect(Collectors.toList());
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.birthday_widget);
-        views.setTextViewText(R.id.widgetTitle, context.getText(R.string.widget_title));
-        views.setTextViewText(R.id.widgetEmpty, context.getText(R.string.widget_empty));
+        views.setTextViewText(R.id.widgetTitle, display.getText(R.string.widget_title));
+        views.setTextViewText(R.id.widgetEmpty, display.getText(R.string.widget_empty));
         views.setOnClickPendingIntent(R.id.widgetRoot, pendingActivity(context,
                 new Intent(context, MainActivity.class), 0));
         views.setViewVisibility(R.id.widgetEmpty, upcoming.isEmpty() ? View.VISIBLE : View.GONE);
@@ -67,8 +68,8 @@ public class BirthdayWidget extends AppWidgetProvider {
 
             Birthday birthday = upcoming.get(i);
             LocalDate occurrence = BirthdayUtils.nextBirthday(birthday.getDay(), birthday.getMonth(), today);
-            String date = BirthdayUtils.formatDate(context, occurrence.getDayOfMonth(), occurrence.getMonthValue(), 0);
-            views.setTextViewText(row, context.getString(R.string.widget_row, birthday.getName(), date));
+            String date = BirthdayUtils.formatDate(display, occurrence.getDayOfMonth(), occurrence.getMonthValue(), 0);
+            views.setTextViewText(row, display.getString(R.string.widget_row, birthday.getName(), date));
             views.setOnClickPendingIntent(row, pendingActivity(context,
                     new Intent(context, BirthdayDetailActivity.class).putExtra("birthday_id", birthday.getId()),
                     birthday.getId()));

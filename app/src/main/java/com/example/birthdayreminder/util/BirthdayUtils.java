@@ -1,6 +1,8 @@
 package com.example.birthdayreminder.util;
 
+import android.app.LocaleManager;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.LocaleList;
 import android.text.format.DateFormat;
 
@@ -78,6 +80,17 @@ public class BirthdayUtils {
             if (language.equals(locales.get(i).getLanguage())) return locales.get(i);
         }
         return Locale.forLanguageTag(language);
+    }
+
+    public static Context applicationLanguageContext(Context context) {
+        LocaleManager manager = context.getSystemService(LocaleManager.class);
+        LocaleList selected = manager.getApplicationLocales();
+        LocaleList locales = selected.isEmpty() ? manager.getSystemLocales() : selected;
+        if (locales.equals(context.getResources().getConfiguration().getLocales())) return context;
+
+        Configuration override = new Configuration();
+        override.setLocales(locales);
+        return context.createConfigurationContext(override);
     }
 
     public static String formatDate(Context context, int day, int month, int year) {
