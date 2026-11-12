@@ -20,11 +20,12 @@ Birthday Reminder is an offline Android app for keeping track of upcoming birthd
 
 ## Install or update
 
-1. Download the APK from [Releases](https://github.com/KaanKaya17/BirthdayReminder/releases). The app requires **Android 13 or later**.
-2. Open **Reminder settings** to allow notifications. Use **Send test notification** to check your settings.
-3. Use **Open exact alarm settings** if you want reminders closer to the chosen time. Android may deliver them later when exact alarms are off.
+1. Download the signed `BirthdayReminder-<version>.apk` from the [latest release](https://github.com/KaanKaya17/BirthdayReminder/releases/latest). The app requires **Android 13 or later**.
+2. Open the APK. If Android asks, allow the browser or file manager that opened it to install apps from that source.
+3. Open **Reminder settings** to allow notifications. Use **Send test notification** to check your settings.
+4. Use **Open exact alarm settings** if you want reminders closer to the chosen time. Android may deliver them later when exact alarms are off.
 
-The GitHub APK is a **debug build**. To preserve your records when updating in place, install it over the existing app with the same signing certificate. If Android rejects the update because the signing certificates differ, create a JSON backup from the working installation and save it somewhere you can access first.
+**Updating.** Version 1.5 supports in-place upgrades from earlier official GitHub APKs. Install it over your current version to keep your birthdays. If you built an APK with a different signing key, export and verify a JSON backup before switching installations. Use **Restore from backup** in the signed release to bring your birthdays back.
 
 ## Reminders, widget, and backups
 
@@ -33,7 +34,11 @@ The GitHub APK is a **debug build**. To preserve your records when updating in p
 - Open **Backup → Create backup file** to export active and archived birthdays, notes, reminder schedules, and celebration status.
 - Open **Backup → Restore from backup** and select a JSON file. Review the preview and confirm. The app adds new birthdays and keeps existing records.
 
-Birthdays are stored locally in a Room database. Choose where to save each JSON backup. Updates migrate previous database schemas in place.
+## Data and privacy
+
+Birthdays are stored locally in a Room database. The app works offline and needs no account. Android may back up the database and preferences according to your system backup settings. Exported JSON files contain names, birthdays, and notes. You choose where to save them.
+
+When reporting a problem, include your device model, Android version, app version, and steps to reproduce. Use fictional names in examples. [Report an issue](https://github.com/KaanKaya17/BirthdayReminder/issues)
 
 ## Development
 
@@ -46,6 +51,8 @@ The app uses Java, AndroidX View Binding, Material 3, Room, and Android AlarmMan
 ```
 
 The last command requires an Android device or emulator. The debug APK is built at `app/build/outputs/apk/debug/app-debug.apk`.
+
+On macOS and Linux, run the same Gradle tasks with `./gradlew`. [Build and sign a release](docs/releasing.md)
 
 - **`data/`** Room schema, migrations, and JSON backups
 - **`notification/`** annual reminder scheduling, simultaneous birthdays, and snoozing

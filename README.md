@@ -20,11 +20,12 @@ Android için Türkçe ve İngilizce kullanılabilen çevrimdışı doğum gün�
 
 ## Kurulum ve güncelleme
 
-1. **Android 13 veya üstü** bir cihazda [Releases](https://github.com/KaanKaya17/BirthdayReminder/releases) bölümünden APK'yı indir.
-2. İlk kurulumun ardından **Hatırlatma ayarları** üzerinden bildirim iznini ver. **Test bildirimi gönder** ile izinleri kontrol edebilirsin.
-3. Seçtiğin saate daha yakın bildirim için **Kesin alarm ayarını aç** seçeneğini kullan. Android, kesin alarm izni kapalıyken bildirimi daha geç gösterebilir.
+1. **Android 13 veya üstü** bir cihazda [son sürümden](https://github.com/KaanKaya17/BirthdayReminder/releases/latest) imzalı `BirthdayReminder-<sürüm>.apk` dosyasını indir.
+2. APK'yı aç. Android sorarsa dosyayı açan tarayıcıya veya dosya yöneticisine bu kaynaktan uygulama yükleme izni ver.
+3. Kurulumdan sonra **Hatırlatma ayarları** üzerinden bildirim iznini ver. **Test bildirimi gönder** ile kontrol edebilirsin.
+4. Seçtiğin saate daha yakın bildirim için **Kesin alarm ayarını aç** seçeneğini kullan. Android, kesin alarm izni kapalıyken bildirimi daha geç gösterebilir.
 
-GitHub APK'sı bir **debug derlemesidir**. Android, yerinde güncelleme için mevcut APK ile yeni APK'nın aynı sertifikayla imzalanmasını ister. Mevcut kurulumun üzerine yükleyerek kayıtlarını koru. Farklı imza nedeniyle kurulum reddedilirse önce çalışan kurulumdan bir JSON yedeği oluştur ve yedeği erişebileceğin bir konuma kaydet.
+**Güncelleme.** 1.5, önceki resmî GitHub APK'larından yerinde geçişi destekler. Mevcut sürümü kaldırmadan yeni APK'yı üzerine yükle. Kendi derlediğin bir APK farklı bir anahtarla imzalandıysa önce mevcut uygulamadan JSON yedeği al. Yedek dosyasını doğruladıktan sonra imzalı sürümü kurup **Yedekten geri yükle** seçeneğini kullan.
 
 ## Bildirim planı, widget ve yedekleme
 
@@ -33,7 +34,11 @@ GitHub APK'sı bir **debug derlemesidir**. Android, yerinde güncelleme için me
 - **Yedek → Yedek dosyası oluştur** ile etkin ve arşivlenmiş kayıtları, notları, bildirim planlarını ve kutlama durumunu dışa aktar.
 - **Yedek → Yedekten geri yükle** ile bir JSON dosyası seç. Önizlemeyi onayladığında uygulama yeni kayıtları ekler ve mevcut kayıtları korur. Önceki JSON yedek biçimleri de okunur.
 
-Kayıtlar cihazda Room veritabanında tutulur. JSON dosyasının nereye kaydedileceğini sen seçersin. Yeni sürümde eski veritabanı şemaları yerinde yükseltilir.
+## Veri ve gizlilik
+
+Kayıtlar cihazda Room veritabanında tutulur. Uygulama çevrimdışı çalışır ve hesap gerektirmez. Android'in yedekleme ayarları açıksa sistem veritabanını ve uygulama tercihlerini yedekleyebilir. Dışa aktardığın JSON dosyası isimleri, doğum tarihlerini ve notları içerir. Saklanacağı konumu sen seçersin.
+
+Bir sorun yaşarsan cihaz modelini, Android ve uygulama sürümünü, ardından sorunu tekrarlama adımlarını GitHub Issues'da paylaş. Örneklerde kişisel kayıtlar yerine kurgusal isimler kullan. [Sorun bildir](https://github.com/KaanKaya17/BirthdayReminder/issues)
 
 ## Geliştirme
 
@@ -46,6 +51,8 @@ Proje Java, AndroidX View Binding, Material 3, Room ve Android AlarmManager kull
 ```
 
 Son komut için bağlı bir Android cihazı veya çalışan emülatör gerekir. Oluşan debug APK'sı `app/build/outputs/apk/debug/app-debug.apk` konumundadır.
+
+macOS ve Linux'ta aynı Gradle görevlerini `./gradlew` ile çalıştırabilirsin. [Sürüm derleme ve imzalama](docs/releasing.md)
 
 - **`data/`** Room şeması, sürüm geçişleri ve JSON yedekleme
 - **`notification/`** yıllık planlama, eş zamanlı doğum günleri ve erteleme

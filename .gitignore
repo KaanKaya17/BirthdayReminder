@@ -13,3 +13,9 @@
 .externalNativeBuild
 .cxx
 local.properties
+*.jks
+*.keystore
+*.p12
+*.pkcs12
+*.dpapi
+*.lineage
