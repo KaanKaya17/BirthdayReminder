@@ -1,6 +1,7 @@
 package com.example.birthdayreminder.adapter;
 
 import android.graphics.drawable.GradientDrawable;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -73,8 +74,9 @@ public class BirthdayAdapter extends RecyclerView.Adapter<BirthdayAdapter.ViewHo
 
         void bind(Birthday birthday) {
             binding.tvName.setText(birthday.getName());
-            binding.tvDate.setText(BirthdayUtils.formatDate(birthday.getDay(), birthday.getMonth(), birthday.getYear()));
-            binding.tvInitials.setText(BirthdayUtils.getInitials(birthday.getName()));
+            Context context = binding.getRoot().getContext();
+            binding.tvDate.setText(BirthdayUtils.formatDate(context, birthday.getDay(), birthday.getMonth(), birthday.getYear()));
+            binding.tvInitials.setText(BirthdayUtils.getInitials(context, birthday.getName()));
 
             // Avatar color
             int color = BirthdayUtils.getAvatarColor(birthday.getName());
@@ -87,7 +89,7 @@ public class BirthdayAdapter extends RecyclerView.Adapter<BirthdayAdapter.ViewHo
             long days = BirthdayUtils.daysUntilNextBirthday(birthday.getDay(), birthday.getMonth());
             binding.tvDaysRemaining.setText(birthday.isArchived()
                     ? binding.getRoot().getContext().getText(R.string.filter_archive)
-                    : BirthdayUtils.formatDaysRemaining(days));
+                    : BirthdayUtils.formatDaysRemaining(context, days));
 
             // Badge color based on proximity
             GradientDrawable badgeDrawable = new GradientDrawable();

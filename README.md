@@ -1,6 +1,8 @@
 # Birthday Reminder
 
-Android için Türkçe, çevrimdışı doğum günü hatırlatıcısı. Yaklaşan tarihleri gör, her kişi için kendi bildirim planını oluştur ve kayıtlarını bir JSON dosyasıyla taşı.
+**🇹🇷 Türkçe** · [🇬🇧 English](README.en.md)
+
+Android için Türkçe ve İngilizce kullanılabilen çevrimdışı doğum günü hatırlatıcısı. Yaklaşan tarihleri gör, her kişi için kendi bildirim planını oluştur ve kayıtlarını bir JSON dosyasıyla taşı.
 
 [Son sürüm ve APK](https://github.com/KaanKaya17/BirthdayReminder/releases/latest)
 
@@ -13,6 +15,7 @@ Android için Türkçe, çevrimdışı doğum günü hatırlatıcısı. Yaklaşa
 - **Bildirimden işlem yapma.** Hatırlatmayı **1 saat sonra** tekrar göster, **Kutladım** ile o yılın kalan hatırlatmalarını kapat veya **Mesaj yaz** ile düzenlenebilir bir kutlama taslağı aç.
 - **Yaklaşan doğum günleri.** Ana ekranda sıradaki doğum gününü ve önümüzdeki 30 günü gör. İsim veya notla ara. Widget, en yakın üç kayda doğrudan erişim sağlar.
 - **Arşiv ve yedek.** Kullanmadığın kayıtları arşivle ve istediğinde geri getir. JSON yedeği oluştur, son yedek zamanını gör ve geri yüklemeden önce kaç yeni kaydın ekleneceğini kontrol et.
+- **Türkçe ve İngilizce.** **Yedek → Hatırlatma ayarları → Uygulama dili** üzerinden **Sistem dili**, **English** veya **Türkçe** seç. Ekranlar, tarihler, yeni bildirimler, kutlama metni ve widget seçilen dile uyarlanır.
 - **Açık ve koyu tema.** Uygulama sistem temasını izler. Büyük yazı boyutunda kayıt formundaki tarih alanları dikey olarak yerleşir.
 
 ## Kurulum ve güncelleme

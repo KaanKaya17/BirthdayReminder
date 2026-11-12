@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_language">Uygulama dili</string>
+    <string name="system_language">Sistem dili</string>
+    <string name="language_english">English</string>
+    <string name="language_turkish">Türkçe</string>
+    <string name="language_tag">tr</string>
+    <string name="birthday_today_badge">Bugün! 🎂</string>
+    <string name="birthday_tomorrow_badge">Yarın! 🎉</string>
+    <string name="backup_filename">dogum-gunleri-%s.json</string>
+    <plurals name="birthday_days_badge">
+        <item quantity="one">%d gün</item>
+        <item quantity="other">%d gün</item>
+    </plurals>
+    <plurals name="birthday_in_days">
+        <item quantity="one">%d gün kaldı</item>
+        <item quantity="other">%d gün kaldı</item>
+    </plurals>
+    <plurals name="dashboard_record_count">
+        <item quantity="one">%d kayıt</item>
+        <item quantity="other">%d kayıt</item>
+    </plurals>
+    <plurals name="dashboard_upcoming_count">
+        <item quantity="one">30 günde %d doğum günü</item>
+        <item quantity="other">30 günde %d doğum günü</item>
+    </plurals>
+    <plurals name="backup_exported">
+        <item quantity="one">Yedek dosyası oluşturuldu (%d kayıt).</item>
+        <item quantity="other">Yedek dosyası oluşturuldu (%d kayıt).</item>
+    </plurals>
+    <plurals name="backup_imported">
+        <item quantity="one">Yedekten %d kayıt eklendi.</item>
+        <item quantity="other">Yedekten %d kayıt eklendi.</item>
+    </plurals>
+    <plurals name="backup_preview_body">
+        <item quantity="one">%d yeni kayıt eklenecek. Mevcut kayıtlar korunacak.</item>
+        <item quantity="other">%d yeni kayıt eklenecek. Mevcut kayıtlar korunacak.</item>
+    </plurals>
+</resources>

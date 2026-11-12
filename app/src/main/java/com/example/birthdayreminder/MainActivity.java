@@ -33,7 +33,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.time.LocalDate;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,9 +43,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private static final Locale TURKISH = Locale.forLanguageTag("tr");
     private static final int UPCOMING_DAYS = 30;
-    private static final DateTimeFormatter BACKUP_DATE = DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm", TURKISH);
 
     private ActivityMainBinding binding;
     private BirthdayViewModel viewModel;
@@ -139,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
         int filter = binding.filterGroup.getCheckedChipId();
         CharSequence search = binding.searchEditText.getText();
-        String query = search == null ? "" : search.toString().trim().toLowerCase(TURKISH);
+        String query = search == null ? "" : searchKey(search.toString().trim());
         List<Birthday> visible = new ArrayList<>();
         Birthday next = null;
         int activeCount = 0;
@@ -161,7 +159,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         showNextBirthday(next, today);
-        binding.dashboardCounts.setText(getString(R.string.dashboard_counts, activeCount, upcomingCount));
+        binding.dashboardCounts.setText(getString(R.string.dashboard_counts,
+                getResources().getQuantityString(R.plurals.dashboard_record_count, activeCount, activeCount),
+                getResources().getQuantityString(R.plurals.dashboard_upcoming_count, upcomingCount, upcomingCount)));
         binding.btnNotifications.setVisibility(hasReminders && !NotificationHelper.isAvailable(this)
                 ? View.VISIBLE : View.GONE);
         birthdayAdapter.setBirthdays(visible);
@@ -173,7 +173,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean contains(String value, String query) {
-        return value != null && value.toLowerCase(TURKISH).contains(query);
+        return value != null && searchKey(value).contains(query);
+    }
+
+    private String searchKey(String value) {
+        return value.toLowerCase(Locale.ROOT).replace("\u0307", "").replace('ı', 'i');
     }
 
     private void showNextBirthday(Birthday birthday, LocalDate today) {
@@ -184,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
         LocalDate occurrence = BirthdayUtils.nextBirthday(birthday.getDay(), birthday.getMonth(), today);
         long days = ChronoUnit.DAYS.between(today, occurrence);
         binding.nextDate.setText(getString(R.string.next_birthday_date,
-                BirthdayUtils.formatDate(occurrence.getDayOfMonth(), occurrence.getMonthValue(), 0),
-                BirthdayUtils.formatDaysRemaining(days)));
+                BirthdayUtils.formatDate(this, occurrence.getDayOfMonth(), occurrence.getMonthValue(), 0),
+                BirthdayUtils.formatDaysRemaining(this, days)));
     }
 
     private void updateEmptyState(int filter, boolean searching) {
@@ -260,9 +264,14 @@ public class MainActivity extends AppCompatActivity {
     private void showMenu() {
         DialogBirthdayBackupBinding menu = DialogBirthdayBackupBinding.inflate(getLayoutInflater());
         long lastBackup = new BirthdayPreferences(this).getLastBackupTime();
-        menu.lastBackupTime.setText(lastBackup == 0 ? getString(R.string.last_backup_none)
-                : getString(R.string.last_backup_at,
-                        BACKUP_DATE.format(Instant.ofEpochMilli(lastBackup).atZone(ZoneId.systemDefault()))));
+        if (lastBackup == 0) {
+            menu.lastBackupTime.setText(R.string.last_backup_none);
+        } else {
+            ZonedDateTime time = Instant.ofEpochMilli(lastBackup).atZone(ZoneId.systemDefault());
+            String date = BirthdayUtils.formatDate(this, time.getDayOfMonth(), time.getMonthValue(), time.getYear());
+            String stamp = getString(R.string.next_reminder_at, date, time.toLocalTime().withSecond(0).withNano(0));
+            menu.lastBackupTime.setText(getString(R.string.last_backup_at, stamp));
+        }
         AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dashboard_more)
                 .setView(menu.getRoot())
@@ -270,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                 .show();
         menu.btnExport.setOnClickListener(v -> {
             dialog.dismiss();
-            exportBackup.launch("dogum-gunleri-" + LocalDate.now() + ".json");
+            exportBackup.launch(getString(R.string.backup_filename, LocalDate.now()));
         });
         menu.btnImport.setOnClickListener(v -> {
             dialog.dismiss();
@@ -292,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
         if (state.preview != null && state.count > 0) {
             backupPreviewDialog = new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.backup_preview_title)
-                    .setMessage(getString(R.string.backup_preview_body, state.count))
+                    .setMessage(getResources().getQuantityString(R.plurals.backup_preview_body, state.count, state.count))
                     .setPositiveButton(R.string.restore, (dialog, which) -> viewModel.confirmRestore())
                     .setNegativeButton(R.string.cancel, (dialog, which) -> viewModel.clearBackupResult())
                     .setOnCancelListener(dialog -> viewModel.clearBackupResult())
@@ -306,9 +315,9 @@ public class MainActivity extends AppCompatActivity {
             message = getString(state.importing ? R.string.backup_import_error : R.string.backup_export_error);
         } else if (state.importing) {
             message = state.count == 0 ? getString(R.string.backup_no_new)
-                    : getString(R.string.backup_imported, state.count);
+                    : getResources().getQuantityString(R.plurals.backup_imported, state.count, state.count);
         } else {
-            message = getString(R.string.backup_exported, state.count);
+            message = getResources().getQuantityString(R.plurals.backup_exported, state.count, state.count);
         }
         Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG)
                 .setAnchorView(binding.fabAdd)

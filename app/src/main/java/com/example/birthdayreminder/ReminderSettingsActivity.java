@@ -1,11 +1,13 @@
 package com.example.birthdayreminder;
 
 import android.Manifest;
+import android.app.LocaleManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.LocaleList;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
@@ -21,6 +23,7 @@ import com.example.birthdayreminder.databinding.ActivityReminderSettingsBinding;
 import com.example.birthdayreminder.notification.BirthdayAlarmScheduler;
 import com.example.birthdayreminder.notification.NotificationHelper;
 import com.example.birthdayreminder.widget.BirthdayWidget;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
@@ -28,6 +31,7 @@ import java.time.LocalTime;
 
 public class ReminderSettingsActivity extends AppCompatActivity {
     private static final String TIME_PICKER = "default_reminder_time";
+    private static final String[] LANGUAGE_TAGS = {"", "en", "tr"};
     private ActivityReminderSettingsBinding binding;
     private BirthdayPreferences preferences;
     private Boolean hadExactPermission;
@@ -43,6 +47,7 @@ public class ReminderSettingsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         preferences = new BirthdayPreferences(this);
         binding.btnBack.setOnClickListener(v -> finish());
+        binding.btnLanguage.setOnClickListener(v -> chooseLanguage());
         binding.btnDefaultTime.setOnClickListener(v -> showTimePicker());
         binding.btnPermission.setOnClickListener(v -> permission.launch(Manifest.permission.POST_NOTIFICATIONS));
         binding.btnSystemSettings.setOnClickListener(v -> openSystemNotifications());
@@ -65,6 +70,36 @@ public class ReminderSettingsActivity extends AppCompatActivity {
         }
     }
 
+    private CharSequence[] languageChoices() {
+        return new CharSequence[] {getText(R.string.system_language),
+                getText(R.string.language_english), getText(R.string.language_turkish)};
+    }
+
+    private int languageSelection() {
+        LocaleList locales = getSystemService(LocaleManager.class).getApplicationLocales();
+        if (locales.isEmpty()) return 0;
+        for (int i = 1; i < LANGUAGE_TAGS.length; i++) {
+            if (LANGUAGE_TAGS[i].equals(locales.get(0).getLanguage())) return i;
+        }
+        return 0;
+    }
+
+    private void chooseLanguage() {
+        int selection = languageSelection();
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.app_language)
+                .setSingleChoiceItems(languageChoices(), selection, (dialog, choice) -> {
+                    dialog.dismiss();
+                    if (choice != selection) {
+                        binding.btnLanguage.setText(languageChoices()[choice]);
+                        getSystemService(LocaleManager.class)
+                                .setApplicationLocales(LocaleList.forLanguageTags(LANGUAGE_TAGS[choice]));
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
     private void openSystemNotifications() {
         Intent settings = new Intent(NotificationHelper.hasPermission(this)
                 ? Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS : Settings.ACTION_APP_NOTIFICATION_SETTINGS)
@@ -82,6 +117,7 @@ public class ReminderSettingsActivity extends AppCompatActivity {
     private void refresh() {
         boolean notifications = NotificationHelper.isAvailable(this);
         boolean exact = BirthdayAlarmScheduler.canScheduleExactly(this);
+        binding.btnLanguage.setText(languageChoices()[languageSelection()]);
         binding.btnDefaultTime.setText(getString(R.string.reminder_time_value, preferences.getDefaultTime()));
         binding.tvPermissionStatus.setText(notifications ? R.string.notifications_enabled : R.string.notifications_disabled);
         binding.btnPermission.setVisibility(NotificationHelper.hasPermission(this) ? View.GONE : View.VISIBLE);

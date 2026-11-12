@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="20dp"
@@ -42,7 +43,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="AK" />
+                tools:text="AK" />
 
         </FrameLayout>
 
@@ -63,7 +64,7 @@
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="İsim" />
+                tools:text="İsim" />
 
             <TextView
                 android:id="@+id/tvDate"
@@ -72,7 +73,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="13sp"
-                android:text="01 Ocak 2000" />
+                tools:text="01 Ocak 2000" />
 
         </LinearLayout>
 
@@ -95,7 +96,7 @@
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:text="5 gün" />
+                tools:text="5 gün" />
 
         </LinearLayout>
 

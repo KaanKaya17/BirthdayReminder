@@ -28,12 +28,9 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class AddEditBirthdayActivity extends AppCompatActivity {
-    private final String[] months = Arrays.stream(Month.values())
-            .map(month -> month.getDisplayName(TextStyle.FULL_STANDALONE, Locale.forLanguageTag("tr")))
-            .toArray(String[]::new);
+    private String[] months;
 
     private ActivityAddEditBirthdayBinding binding;
     private BirthdayViewModel viewModel;
@@ -52,6 +49,9 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(BirthdayViewModel.class);
         birthdayId = getIntent().getIntExtra("birthday_id", 0);
 
+        months = Arrays.stream(Month.values())
+                .map(month -> month.getDisplayName(TextStyle.FULL_STANDALONE, BirthdayUtils.language(this)))
+                .toArray(String[]::new);
         binding.etMonth.setSimpleItems(months);
         binding.etMonth.setOnItemClickListener((parent, view, position, id) -> binding.dateError.setVisibility(View.GONE));
         binding.btnBack.setOnClickListener(v -> finish());
@@ -115,7 +115,19 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle state) {
         state.putBoolean("ready", ready);
         state.putString("slots", ReminderSlot.encode(slots));
+        state.putInt("month", selectedMonth());
         super.onSaveInstanceState(state);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+        int month = state.getInt("month");
+        if (month > 0) binding.etMonth.setText(months[month - 1], false);
+    }
+
+    private int selectedMonth() {
+        return Arrays.asList(months).indexOf(binding.etMonth.getText().toString()) + 1;
     }
 
     private void loadBirthday() {
@@ -199,7 +211,7 @@ public class AddEditBirthdayActivity extends AppCompatActivity {
         }
         binding.nameInputLayout.setError(null);
         int day, year;
-        int month = Arrays.asList(months).indexOf(binding.etMonth.getText().toString()) + 1;
+        int month = selectedMonth();
         String yearText = binding.etYear.getText().toString();
         try {
             day = Integer.parseInt(binding.etDay.getText().toString());

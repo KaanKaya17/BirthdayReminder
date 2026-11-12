@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">Doğum Günü Hatırlatıcı</string>
+
+    <!-- Main Screen -->
+    <string name="no_birthdays_yet">Henüz doğum günü eklenmedi</string>
+    <string name="no_birthdays_hint">İlk kaydınızı ekleyin veya bir yedek yükleyin.</string>
+    <string name="search_hint">İsim veya not ara</string>
+    <string name="no_upcoming">Yaklaşan doğum günü yok</string>
+
+    <!-- Add/Edit Screen -->
+    <string name="add_birthday">Doğum Günü Ekle</string>
+    <string name="edit_birthday">Doğum Günü Düzenle</string>
+    <string name="name_label">İsim</string>
+    <string name="name_hint">Kişinin adını girin</string>
+    <string name="date_label">Doğum Tarihi</string>
+    <string name="select_date">Tarih Seç</string>
+    <string name="notes_label">Notlar</string>
+    <string name="notes_hint">Hediye fikirleri, mesajlar…</string>
+    <string name="notification_label">Bildirim Hatırlatması</string>
+    <string name="save">Kaydet</string>
+    <string name="cancel">İptal</string>
+    <string name="name_required">İsim alanı zorunludur</string>
+    <string name="date_required">Tarih seçmeniz gerekiyor</string>
+    <string name="birthday_saved">Doğum günü kaydedildi ✓</string>
+    <string name="birthday_updated">Doğum günü güncellendi ✓</string>
+
+    <!-- Detail Screen -->
+    <string name="birthday_detail">Doğum Günü Detayı</string>
+    <string name="age_format">%d yaşına girecek</string>
+    <string name="current_age_format">Şu anki yaşı: %d</string>
+    <string name="days_remaining">Kalan gün</string>
+    <string name="today_birthday">Bugün doğum günü! 🎂</string>
+    <string name="tomorrow_birthday">Yarın doğum günü! 🎉</string>
+    <string name="notes_title">Notlar</string>
+    <string name="no_notes">Not eklenmemiş</string>
+    <string name="edit">Düzenle</string>
+    <string name="undo">Geri Al</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Doğum Günü Hatırlatmaları</string>
+    <string name="notification_channel_desc">Yaklaşan doğum günleri için hatırlatmalar</string>
+    <string name="notification_today_title">🎂 Bugün Doğum Günü!</string>
+    <string name="notification_today_text">%s bugün yeni yaşına giriyor.</string>
+    <string name="notification_tomorrow_title">🎉 Yarın Doğum Günü!</string>
+    <string name="notification_tomorrow_text">%s yarın yeni yaşına giriyor.</string>
+    <string name="notification_days_before_title">🎈 Doğum Günü Yaklaşıyor!</string>
+    <string name="notification_days_before_text">%1$s %2$d gün sonra yeni yaşına giriyor.</string>
+
+    <!-- Notification Settings -->
+    <string name="notify_timing_label">Hatırlatma Zamanı</string>
+    <string name="notify_time_label">Bildirim Saati</string>
+    <string name="notify_same_day">Aynı gün</string>
+    <string name="notify_1_day_before">1 gün önce</string>
+    <string name="notify_2_days_before">2 gün önce</string>
+    <string name="notify_1_week_before">1 hafta önce</string>
+
+    <!-- General -->
+    <string name="unknown_age">Yaş bilinmiyor</string>
+    <string name="year_not_specified">Yıl belirtilmemiş</string>
+
+    <!-- Zodiac Signs -->
+    <string name="zodiac_aries">♈ Koç</string>
+    <string name="zodiac_taurus">♉ Boğa</string>
+    <string name="zodiac_gemini">♊ İkizler</string>
+    <string name="zodiac_cancer">♋ Yengeç</string>
+    <string name="zodiac_leo">♌ Aslan</string>
+    <string name="zodiac_virgo">♍ Başak</string>
+    <string name="zodiac_libra">♎ Terazi</string>
+    <string name="zodiac_scorpio">♏ Akrep</string>
+    <string name="zodiac_sagittarius">♐ Yay</string>
+    <string name="zodiac_capricorn">♑ Oğlak</string>
+    <string name="zodiac_aquarius">♒ Kova</string>
+    <string name="zodiac_pisces">♓ Balık</string>
+</resources>

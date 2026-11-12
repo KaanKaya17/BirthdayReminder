@@ -107,8 +107,8 @@ public class BirthdayDetailActivity extends AppCompatActivity {
 
     private void showBirthday() {
         binding.tvName.setText(birthday.getName());
-        binding.tvDate.setText(BirthdayUtils.formatDate(birthday.getDay(), birthday.getMonth(), birthday.getYear()));
-        binding.tvInitials.setText(BirthdayUtils.getInitials(birthday.getName()));
+        binding.tvDate.setText(BirthdayUtils.formatDate(this, birthday.getDay(), birthday.getMonth(), birthday.getYear()));
+        binding.tvInitials.setText(BirthdayUtils.getInitials(this, birthday.getName()));
         GradientDrawable avatar = new GradientDrawable();
         avatar.setShape(GradientDrawable.OVAL);
         avatar.setColor(BirthdayUtils.getAvatarColor(birthday.getName()));
@@ -122,7 +122,7 @@ public class BirthdayDetailActivity extends AppCompatActivity {
         } else if (days == 1) {
             binding.tvBirthdayStatus.setText(R.string.tomorrow_birthday);
         } else {
-            binding.tvBirthdayStatus.setText(getString(R.string.birthday_in_days, days));
+            binding.tvBirthdayStatus.setText(getResources().getQuantityString(R.plurals.birthday_in_days, (int) days, days));
         }
         String zodiac = getString(BirthdayUtils.getZodiacStringId(birthday.getDay(), birthday.getMonth()));
         int age = BirthdayUtils.calculateNextAge(birthday.getDay(), birthday.getMonth(), birthday.getYear());
@@ -179,7 +179,7 @@ public class BirthdayDetailActivity extends AppCompatActivity {
     private String formatReminder(ZonedDateTime time) {
         LocalDate date = time.toLocalDate();
         return getString(R.string.next_reminder_at,
-                BirthdayUtils.formatDate(date.getDayOfMonth(), date.getMonthValue(), date.getYear()),
+                BirthdayUtils.formatDate(this, date.getDayOfMonth(), date.getMonthValue(), date.getYear()),
                 time.toLocalTime().withSecond(0).withNano(0));
     }
 

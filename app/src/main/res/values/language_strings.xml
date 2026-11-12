@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_language">App language</string>
+    <string name="system_language">System default</string>
+    <string name="language_english">English</string>
+    <string name="language_turkish">Türkçe</string>
+    <string name="language_tag">en</string>
+    <string name="birthday_today_badge">Today! 🎂</string>
+    <string name="birthday_tomorrow_badge">Tomorrow! 🎉</string>
+    <string name="backup_filename">birthdays-%s.json</string>
+    <plurals name="birthday_days_badge">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="birthday_in_days">
+        <item quantity="one">%d day to go</item>
+        <item quantity="other">%d days to go</item>
+    </plurals>
+    <plurals name="dashboard_record_count">
+        <item quantity="one">%d birthday</item>
+        <item quantity="other">%d birthdays</item>
+    </plurals>
+    <plurals name="dashboard_upcoming_count">
+        <item quantity="one">%d in the next 30 days</item>
+        <item quantity="other">%d in the next 30 days</item>
+    </plurals>
+    <plurals name="backup_exported">
+        <item quantity="one">Backup created (%d birthday).</item>
+        <item quantity="other">Backup created (%d birthdays).</item>
+    </plurals>
+    <plurals name="backup_imported">
+        <item quantity="one">Added %d birthday from the backup.</item>
+        <item quantity="other">Added %d birthdays from the backup.</item>
+    </plurals>
+    <plurals name="backup_preview_body">
+        <item quantity="one">%d birthday will be added. Your existing birthdays will be kept.</item>
+        <item quantity="other">%d birthdays will be added. Your existing birthdays will be kept.</item>
+    </plurals>
+</resources>

@@ -26,13 +26,17 @@ public class BirthdayWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
-        Context app = context.getApplicationContext();
         PendingResult pending = goAsync();
+        refreshAsync(context, pending::finish);
+    }
+
+    public static void refreshAsync(Context context, Runnable onComplete) {
+        Context app = context.getApplicationContext();
         BirthdayDatabase.getDatabase(app).getQueryExecutor().execute(() -> {
             try {
                 refresh(app);
             } finally {
-                pending.finish();
+                onComplete.run();
             }
         });
     }
@@ -51,6 +55,8 @@ public class BirthdayWidget extends AppWidgetProvider {
                 .collect(Collectors.toList());
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.birthday_widget);
+        views.setTextViewText(R.id.widgetTitle, context.getText(R.string.widget_title));
+        views.setTextViewText(R.id.widgetEmpty, context.getText(R.string.widget_empty));
         views.setOnClickPendingIntent(R.id.widgetRoot, pendingActivity(context,
                 new Intent(context, MainActivity.class), 0));
         views.setViewVisibility(R.id.widgetEmpty, upcoming.isEmpty() ? View.VISIBLE : View.GONE);
@@ -61,7 +67,7 @@ public class BirthdayWidget extends AppWidgetProvider {
 
             Birthday birthday = upcoming.get(i);
             LocalDate occurrence = BirthdayUtils.nextBirthday(birthday.getDay(), birthday.getMonth(), today);
-            String date = BirthdayUtils.formatDate(occurrence.getDayOfMonth(), occurrence.getMonthValue(), 0);
+            String date = BirthdayUtils.formatDate(context, occurrence.getDayOfMonth(), occurrence.getMonthValue(), 0);
             views.setTextViewText(row, context.getString(R.string.widget_row, birthday.getName(), date));
             views.setOnClickPendingIntent(row, pendingActivity(context,
                     new Intent(context, BirthdayDetailActivity.class).putExtra("birthday_id", birthday.getId()),

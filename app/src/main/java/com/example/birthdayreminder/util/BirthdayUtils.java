@@ -1,6 +1,8 @@
 package com.example.birthdayreminder.util;
 
 import android.content.Context;
+import android.os.LocaleList;
+import android.text.format.DateFormat;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
@@ -14,9 +16,6 @@ import com.example.birthdayreminder.data.ReminderSlot;
 
 public class BirthdayUtils {
 
-    private static final Locale TURKISH = Locale.forLanguageTag("tr");
-    private static final DateTimeFormatter FULL_DATE = DateTimeFormatter.ofPattern("dd MMMM yyyy", TURKISH);
-    private static final DateTimeFormatter MONTH_AND_DAY = DateTimeFormatter.ofPattern("dd MMMM", TURKISH);
     private static final int[] AVATAR_COLORS = {
             0xFFA23B68, 0xFF753E91, 0xFF594296, 0xFF445299, 0xFF24648B,
             0xFF216975, 0xFF276E5C, 0xFF486D46, 0xFF8A572A, 0xFF9B493F
@@ -72,23 +71,32 @@ public class BirthdayUtils {
         return occurrence.isBefore(from) ? birthday.atYear(from.getYear() + 1) : occurrence;
     }
 
-    /**
-     * Format date as "dd MMMM" (e.g., "15 Mart") or "dd MMMM yyyy" if year > 0.
-     */
-    public static String formatDate(int day, int month, int year) {
-        if (year > 0) {
-            return LocalDate.of(year, month, day).format(FULL_DATE);
+    public static Locale language(Context context) {
+        String language = context.getString(R.string.language_tag);
+        LocaleList locales = context.getResources().getConfiguration().getLocales();
+        for (int i = 0; i < locales.size(); i++) {
+            if (language.equals(locales.get(i).getLanguage())) return locales.get(i);
         }
-        return MonthDay.of(month, day).format(MONTH_AND_DAY);
+        return Locale.forLanguageTag(language);
+    }
+
+    public static String formatDate(Context context, int day, int month, int year) {
+        Locale language = language(context);
+        String pattern = DateFormat.getBestDateTimePattern(language, year > 0 ? "yMMMMd" : "MMMMd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, language);
+        if (year > 0) {
+            return LocalDate.of(year, month, day).format(formatter);
+        }
+        return MonthDay.of(month, day).format(formatter);
     }
 
     /**
      * Format remaining days into a friendly string.
      */
-    public static String formatDaysRemaining(long days) {
-        if (days == 0) return "Bugün! 🎂";
-        if (days == 1) return "Yarın! 🎉";
-        return days + " gün";
+    public static String formatDaysRemaining(Context context, long days) {
+        if (days == 0) return context.getString(R.string.birthday_today_badge);
+        if (days == 1) return context.getString(R.string.birthday_tomorrow_badge);
+        return context.getResources().getQuantityString(R.plurals.birthday_days_badge, (int) days, days);
     }
 
     /**
@@ -102,13 +110,12 @@ public class BirthdayUtils {
     /**
      * Get first letter(s) of a name for avatar display.
      */
-    public static String getInitials(String name) {
+    public static String getInitials(Context context, String name) {
         if (name == null || name.trim().isEmpty()) return "?";
         String[] parts = name.trim().split("\\s+");
-        if (parts.length >= 2) {
-            return ("" + parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase(Locale.getDefault());
-        }
-        return ("" + parts[0].charAt(0)).toUpperCase(Locale.getDefault());
+        StringBuilder initials = new StringBuilder().appendCodePoint(parts[0].codePointAt(0));
+        if (parts.length >= 2) initials.appendCodePoint(parts[1].codePointAt(0));
+        return initials.toString().toUpperCase(language(context));
     }
 
     /**

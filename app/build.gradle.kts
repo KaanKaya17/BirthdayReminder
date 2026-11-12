@@ -10,8 +10,8 @@ android {
         applicationId = "com.example.birthdayreminder"
         minSdk = 33
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 5
+        versionName = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,6 +31,9 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+    androidResources {
+        localeFilters += listOf("en", "tr")
     }
 }
 

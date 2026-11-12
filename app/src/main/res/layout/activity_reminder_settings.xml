@@ -32,6 +32,21 @@
             style="@style/BirthdayScreenContent">
             <com.google.android.material.card.MaterialCardView
                 style="@style/BirthdaySurfaceCard">
+                <LinearLayout style="@style/BirthdayCardContent">
+                    <TextView
+                        style="@style/BirthdaySectionHeading"
+                        android:text="@string/app_language" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLanguage"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/system_language" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                style="@style/BirthdaySurfaceCard">
                 <LinearLayout
                     style="@style/BirthdayCardContent">
                     <TextView
