@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/home_background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".ReminderSettingsActivity">
+    <LinearLayout
+        style="@style/BirthdayToolbar">
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnBack"
+            style="@style/BirthdayToolbarIcon"
+            android:contentDescription="@string/back"
+            app:srcCompat="@drawable/ic_back"
+            app:tint="?attr/colorOnSurface" />
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/BirthdayToolbarTitle"
+            android:text="@string/reminder_settings" />
+    </LinearLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+        <LinearLayout
+            style="@style/BirthdayScreenContent">
+            <com.google.android.material.card.MaterialCardView
+                style="@style/BirthdaySurfaceCard">
+                <LinearLayout
+                    style="@style/BirthdayCardContent">
+                    <TextView
+                        style="@style/BirthdaySectionHeading"
+                        android:text="@string/default_reminder_time" />
+                    <TextView
+                        style="@style/BirthdaySupportingText"
+                        android:text="@string/default_reminder_hint" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDefaultTime"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/notify_time_label"
+                        app:icon="@drawable/ic_notification"
+                        app:iconGravity="textStart" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                style="@style/BirthdaySurfaceCard">
+                <LinearLayout
+                    style="@style/BirthdayCardContent">
+                    <TextView
+                        style="@style/BirthdaySectionHeading"
+                        android:text="@string/notification_settings" />
+                    <TextView
+                        android:id="@+id/tvPermissionStatus"
+                        style="@style/BirthdaySupportingText" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPermission"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/enable_notifications" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSystemSettings"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/system_notification_settings" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTest"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/send_test_notification" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                style="@style/BirthdaySurfaceCard">
+                <LinearLayout
+                    style="@style/BirthdayCardContent">
+                    <TextView
+                        style="@style/BirthdaySectionHeading"
+                        android:text="@string/alarm_timing" />
+                    <TextView
+                        android:id="@+id/tvExactStatus"
+                        style="@style/BirthdaySupportingText" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnExact"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/enable_exact_reminders" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/widgetCard"
+                style="@style/BirthdaySurfaceCard">
+                <LinearLayout
+                    style="@style/BirthdayCardContent">
+                    <TextView
+                        style="@style/BirthdaySectionHeading"
+                        android:text="@string/widget_title" />
+                    <TextView
+                        style="@style/BirthdaySupportingText"
+                        android:text="@string/widget_description" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPinWidget"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/pin_widget" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

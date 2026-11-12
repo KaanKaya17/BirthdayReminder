@@ -2,9 +2,7 @@ package com.example.birthdayreminder.adapter;
 
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +18,7 @@ import java.util.List;
 public class BirthdayAdapter extends RecyclerView.Adapter<BirthdayAdapter.ViewHolder> {
 
     private List<Birthday> birthdays = new ArrayList<>();
-    private OnBirthdayClickListener listener;
+    private final OnBirthdayClickListener listener;
 
     public interface OnBirthdayClickListener {
         void onBirthdayClick(Birthday birthday);
@@ -66,7 +64,7 @@ public class BirthdayAdapter extends RecyclerView.Adapter<BirthdayAdapter.ViewHo
             this.binding = binding;
 
             binding.getRoot().setOnClickListener(v -> {
-                int pos = getAdapterPosition();
+                int pos = getBindingAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && listener != null) {
                     listener.onBirthdayClick(birthdays.get(pos));
                 }
@@ -87,20 +85,24 @@ public class BirthdayAdapter extends RecyclerView.Adapter<BirthdayAdapter.ViewHo
 
             // Days remaining badge
             long days = BirthdayUtils.daysUntilNextBirthday(birthday.getDay(), birthday.getMonth());
-            binding.tvDaysRemaining.setText(BirthdayUtils.formatDaysRemaining(days));
+            binding.tvDaysRemaining.setText(birthday.isArchived()
+                    ? binding.getRoot().getContext().getText(R.string.filter_archive)
+                    : BirthdayUtils.formatDaysRemaining(days));
 
             // Badge color based on proximity
             GradientDrawable badgeDrawable = new GradientDrawable();
             badgeDrawable.setCornerRadius(100f);
-            if (days == 0) {
-                badgeDrawable.setColor(binding.getRoot().getContext().getColor(R.color.today_badge));
-            } else if (days <= 7) {
-                badgeDrawable.setColor(binding.getRoot().getContext().getColor(R.color.secondary));
-            } else if (days <= 30) {
-                badgeDrawable.setColor(binding.getRoot().getContext().getColor(R.color.soon_badge));
-            } else {
-                badgeDrawable.setColor(binding.getRoot().getContext().getColor(R.color.later_badge));
+            int badgeColor = R.color.later_badge;
+            if (!birthday.isArchived()) {
+                if (days == 0) {
+                    badgeColor = R.color.today_badge;
+                } else if (days <= 7) {
+                    badgeColor = R.color.primary;
+                } else if (days <= 30) {
+                    badgeColor = R.color.soon_badge;
+                }
             }
+            badgeDrawable.setColor(binding.getRoot().getContext().getColor(badgeColor));
             binding.tvDaysRemaining.setBackground(badgeDrawable);
         }
     }

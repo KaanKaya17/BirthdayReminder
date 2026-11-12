@@ -9,8 +9,10 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Birthday.class}, version = 2, exportSchema = false)
+@Database(entities = {Birthday.class}, version = 5, exportSchema = false)
 public abstract class BirthdayDatabase extends RoomDatabase {
+
+    public static final String NAME = "birthday_database";
 
     public abstract BirthdayDao birthdayDao();
 
@@ -25,20 +27,45 @@ public abstract class BirthdayDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE birthdays ADD COLUMN archived INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE birthdays ADD COLUMN extraReminderDays INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE birthdays ADD COLUMN celebratedYear INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE birthdays ADD COLUMN reminderSchedule TEXT");
+            database.execSQL("ALTER TABLE birthdays ADD COLUMN snoozedUntil INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE birthdays ADD COLUMN snoozedYear INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE birthdays ADD COLUMN lastRegularDelivery INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
     public static BirthdayDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (BirthdayDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                            BirthdayDatabase.class,
-                            "birthday_database"
-                    )
-                    .addMigrations(MIGRATION_1_2)
-                    .build();
+                    INSTANCE = open(context.getApplicationContext(), NAME);
                 }
             }
         }
         return INSTANCE;
+    }
+
+    static BirthdayDatabase open(Context context, String name) {
+        return Room.databaseBuilder(context, BirthdayDatabase.class, name)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                .build();
     }
 }

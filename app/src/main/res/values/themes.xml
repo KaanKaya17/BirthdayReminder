@@ -4,6 +4,9 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">#EFE1FA</item>
+        <item name="colorOnPrimaryContainer">#321746</item>
+        <item name="colorOutlineVariant">#DCD2E4</item>
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorOnSecondary">@color/on_secondary</item>
         <item name="colorTertiary">@color/tertiary</item>
@@ -12,7 +15,7 @@
         <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorOnSurface">@color/on_surface</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
-        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:statusBarColor">@color/home_background</item>
         <item name="android:navigationBarColor">@color/background</item>
     </style>
 

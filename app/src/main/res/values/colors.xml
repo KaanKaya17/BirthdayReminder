@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Primary Colors -->
-    <color name="primary">#FF7B1FA2</color>
+    <color name="primary">#FF684686</color>
     <color name="primary_dark">#FF6A1B9A</color>
-    <color name="primary_light">#FFCE93D8</color>
+    <color name="primary_light">#FFDEB9F8</color>
     <color name="on_primary">#FFFFFFFF</color>
 
     <!-- Secondary Colors -->
@@ -24,9 +24,9 @@
     <color name="tertiary">#FFFFAB40</color>
 
     <!-- Status Colors -->
-    <color name="today_badge">#FFFF4081</color>
-    <color name="soon_badge">#FFFF9800</color>
-    <color name="later_badge">#FF9E9E9E</color>
+    <color name="today_badge">#FF9C275C</color>
+    <color name="soon_badge">#FF865014</color>
+    <color name="later_badge">#FF5C5364</color>
 
     <!-- Gradient Colors -->
     <color name="gradient_start">#FF9C27B0</color>

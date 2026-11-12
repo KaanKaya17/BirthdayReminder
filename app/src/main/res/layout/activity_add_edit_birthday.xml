@@ -1,288 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/home_background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".AddEditBirthdayActivity">
-
     <LinearLayout
+        style="@style/BirthdayToolbar">
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnBack"
+            style="@style/BirthdayToolbarIcon"
+            android:contentDescription="@string/back"
+            app:srcCompat="@drawable/ic_back"
+            app:tint="?attr/colorOnSurface" />
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/BirthdayToolbarTitle"
+            android:text="@string/add_birthday" />
+    </LinearLayout>
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Toolbar -->
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/bg_gradient"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="8dp"
-            android:paddingEnd="16dp">
-
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/cancel"
-                android:src="@drawable/ic_back"
-                app:tint="@color/white" />
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="@string/add_birthday"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <!-- Form Content -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <!-- Avatar Preview -->
-            <FrameLayout
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp">
-
-                <View
-                    android:id="@+id/avatarBackground"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:background="@drawable/bg_circle_avatar" />
-
-                <TextView
-                    android:id="@+id/tvAvatarInitial"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="?"
-                    android:textColor="@color/white"
-                    android:textSize="32sp"
-                    android:textStyle="bold" />
-
-            </FrameLayout>
-
-            <!-- Name Input -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/nameInputLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/name_label"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:startIconDrawable="@drawable/ic_person"
-                app:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:maxLines="1" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Date Picker -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/dateInputLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="@string/date_label"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:startIconDrawable="@drawable/ic_calendar"
-                app:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:inputType="none" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Notes Input -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/notesInputLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="@string/notes_label"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="500">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNotes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:hint="@string/notes_hint"
-                    android:inputType="textMultiLine"
-                    android:maxLength="500"
-                    android:minLines="3" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Notification Toggle -->
+            style="@style/BirthdayScreenContent">
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
-
+                style="@style/BirthdaySurfaceCard">
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
+                    style="@style/BirthdayCardContent">
+                    <TextView
+                        style="@style/BirthdaySectionHeading"
+                        android:text="@string/person_section" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/nameInputLayout"
+                        style="@style/BirthdayInput"
+                        android:hint="@string/name_label">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:singleLine="true"
+                            android:imeOptions="actionNext" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        style="@style/BirthdayFieldLabel"
+                        android:text="@string/date_label" />
                     <LinearLayout
+                        android:id="@+id/dateFields"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_notification"
-                            app:tint="?attr/colorPrimary" />
-
-                        <TextView
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/dayInputLayout"
+                            style="@style/BirthdayInput"
+                            android:hint="@string/birthday_day"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_weight="1"
-                            android:text="@string/notification_label"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="16sp" />
-
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/switchNotification"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true" />
-
+                            android:layout_weight="2">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etDay"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:imeOptions="actionNext" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/monthInputLayout"
+                            style="@style/BirthdayDropdown"
+                            android:hint="@string/birthday_month"
+                            android:layout_width="0dp"
+                            android:layout_weight="4"
+                            android:layout_marginStart="8dp">
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/etMonth"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/yearInputLayout"
+                            style="@style/BirthdayInput"
+                            android:hint="@string/birthday_year"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_marginStart="8dp">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etYear"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:maxLength="9"
+                                android:imeOptions="actionDone" />
+                        </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
-
-                    <!-- Notification Settings (visible when switch is ON) -->
+                    <TextView
+                        android:id="@+id/dateError"
+                        style="@style/BirthdaySupportingText"
+                        android:accessibilityLiveRegion="polite"
+                        android:textColor="?attr/colorError"
+                        android:visibility="gone" />
+                    <TextView
+                        style="@style/BirthdaySupportingText"
+                        android:text="@string/year_optional" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                style="@style/BirthdaySurfaceCard">
+                <LinearLayout
+                    style="@style/BirthdayCardContent">
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switchNotification"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:minHeight="48dp"
+                        android:text="@string/reminder_section"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
                     <LinearLayout
                         android:id="@+id/notificationSettingsLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:paddingBottom="16dp"
-                        android:visibility="visible">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="12dp"
-                            android:background="@color/divider" />
-
-                        <!-- Timing Dropdown -->
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/timingInputLayout"
-                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:id="@+id/reminderSlots"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/notify_timing_label"
-                            app:boxCornerRadiusBottomEnd="12dp"
-                            app:boxCornerRadiusBottomStart="12dp"
-                            app:boxCornerRadiusTopEnd="12dp"
-                            app:boxCornerRadiusTopStart="12dp">
-
-                            <AutoCompleteTextView
-                                android:id="@+id/actvNotifyTiming"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="none"
-                                android:text="@string/notify_1_day_before" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <!-- Time Picker -->
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/timeInputLayout"
-                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                            android:layout_width="match_parent"
+                            android:orientation="vertical" />
+                        <TextView
+                            android:id="@+id/reminderError"
+                            style="@style/BirthdaySupportingText"
+                            android:accessibilityLiveRegion="polite"
+                            android:text="@string/reminder_slot_required"
+                            android:textColor="?attr/colorError"
+                            android:visibility="gone" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAddReminder"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:hint="@string/notify_time_label"
-                            app:boxCornerRadiusBottomEnd="12dp"
-                            app:boxCornerRadiusBottomStart="12dp"
-                            app:boxCornerRadiusTopEnd="12dp"
-                            app:boxCornerRadiusTopStart="12dp"
-                            app:startIconDrawable="@drawable/ic_notification">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etNotifyTime"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:clickable="true"
-                                android:cursorVisible="false"
-                                android:focusable="false"
-                                android:inputType="none"
-                                android:text="09:00" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
+                            android:layout_marginTop="6dp"
+                            android:text="@string/add_reminder_slot"
+                            app:icon="@drawable/ic_add" />
+                        <TextView
+                            android:id="@+id/notificationStatus"
+                            style="@style/BirthdaySupportingText"
+                            android:minHeight="48dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/notifications_blocked"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:visibility="gone" />
                     </LinearLayout>
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Save Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSave"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/save"
-                android:textSize="16sp"
-                app:backgroundTint="@color/primary"
-                app:cornerRadius="28dp"
-                app:icon="@drawable/ic_cake"
-                app:iconGravity="textStart"
-                app:iconTint="@color/white" />
-
+            <com.google.android.material.card.MaterialCardView
+                style="@style/BirthdaySurfaceCard">
+                <LinearLayout
+                    style="@style/BirthdayCardContent">
+                    <TextView
+                        style="@style/BirthdaySectionHeading"
+                        android:text="@string/gift_notes" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/notesInputLayout"
+                        style="@style/BirthdayInput"
+                        android:hint="@string/notes_hint">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNotes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:inputType="textCapSentences|textMultiLine"
+                            android:minLines="2" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-
-    </LinearLayout>
-
-</ScrollView>
+    </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSave"
+        style="@style/BirthdaySaveButton"
+        android:text="@string/save" />
+</LinearLayout>

@@ -1,264 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/home_background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".BirthdayDetailActivity">
-
     <LinearLayout
+        style="@style/BirthdayToolbar">
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnBack"
+            style="@style/BirthdayToolbarIcon"
+            android:contentDescription="@string/back"
+            app:srcCompat="@drawable/ic_back"
+            app:tint="?attr/colorOnSurface" />
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/BirthdayToolbarTitle"
+            android:text="@string/birthday_detail" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnEdit"
+            style="@style/BirthdayToolbarIcon"
+            android:contentDescription="@string/edit"
+            app:srcCompat="@drawable/ic_edit"
+            app:tint="?attr/colorOnSurface" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnArchive"
+            style="@style/BirthdayToolbarIcon"
+            android:contentDescription="@string/archive"
+            app:srcCompat="@drawable/ic_archive"
+            app:tint="?attr/colorOnSurface" />
+    </LinearLayout>
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Header with Gradient -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_gradient"
-            android:paddingBottom="32dp">
-
-            <!-- Back Button -->
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/cancel"
-                android:src="@drawable/ic_back"
-                app:tint="@color/white" />
-
-            <!-- Action buttons -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/btnEdit"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/edit"
-                    android:src="@drawable/ic_edit"
-                    app:tint="@color/white" />
-
-                <ImageButton
-                    android:id="@+id/btnDelete"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="4dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/delete"
-                    android:src="@drawable/ic_delete"
-                    app:tint="@color/white" />
-
-            </LinearLayout>
-
-            <!-- Large Avatar -->
-            <FrameLayout
-                android:id="@+id/avatarContainer"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="64dp">
-
-                <View
-                    android:id="@+id/avatarBackground"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:background="@drawable/bg_circle_avatar" />
-
-                <TextView
-                    android:id="@+id/tvInitials"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="40sp"
-                    android:textStyle="bold" />
-
-            </FrameLayout>
-
-            <!-- Name -->
-            <TextView
-                android:id="@+id/tvName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/avatarContainer"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <!-- Date -->
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvName"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="4dp"
-                android:textColor="#CCFFFFFF"
-                android:textSize="14sp" />
-
-            <!-- Zodiac Chip -->
-            <TextView
-                android:id="@+id/tvZodiac"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvDate"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_zodiac_chip"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                tools:text="♈ Koç"
-                tools:visibility="visible" />
-
-        </RelativeLayout>
-
-        <!-- Info Cards -->
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-16dp"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <!-- Age Card -->
+            style="@style/BirthdayScreenContent">
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
+                style="@style/BirthdaySurfaceCard"
+                app:cardBackgroundColor="@color/home_hero"
                 app:strokeWidth="0dp">
-
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
+                    style="@style/BirthdayCardContent">
                     <TextView
-                        android:id="@+id/tvAge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/primary"
-                        android:textSize="32sp"
-                        android:textStyle="bold"
-                        tools:text="25" />
-
-                    <TextView
-                        android:id="@+id/tvAgeLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:id="@+id/tvInitials"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
                         android:gravity="center"
-                        android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="12sp"
-                        tools:text="yaşına girecek" />
-
+                        android:importantForAccessibility="no"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:accessibilityHeading="true"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                        android:textColor="@color/home_on_hero"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvDate"
+                        style="@style/BirthdaySupportingText"
+                        android:textColor="@color/home_hero_muted" />
+                    <TextView
+                        android:id="@+id/tvBirthdayStatus"
+                        style="@style/BirthdaySupportingText"
+                        android:textColor="@color/home_on_hero"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvAgeZodiac"
+                        style="@style/BirthdaySupportingText"
+                        android:textColor="@color/home_hero_muted"
+                        android:visibility="gone" />
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Days Remaining Card -->
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:strokeWidth="0dp">
-
+                style="@style/BirthdaySurfaceCard">
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
+                    style="@style/BirthdayCardContent">
                     <TextView
-                        android:id="@+id/tvDaysCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/secondary"
-                        android:textSize="32sp"
-                        android:textStyle="bold"
-                        tools:text="42" />
-
+                        style="@style/BirthdaySectionHeading"
+                        android:text="@string/next_reminder" />
                     <TextView
-                        android:id="@+id/tvDaysLabel"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvReminder"
+                        style="@style/BirthdaySupportingText"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textColor="?attr/colorOnSurface" />
+                    <TextView
+                        android:id="@+id/tvSnoozedReminder"
+                        style="@style/BirthdaySupportingText"
+                        android:textColor="?attr/colorPrimary"
+                        android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/tvReminderPlan"
+                        style="@style/BirthdaySupportingText"
+                        android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/tvReminderStatus"
+                        style="@style/BirthdaySupportingText"
+                        android:visibility="gone" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnReminderSettings"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:gravity="center"
-                        android:text="@string/days_remaining"
-                        android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="12sp" />
-
+                        android:layout_marginTop="8dp"
+                        android:text="@string/reminder_settings"
+                        android:visibility="gone" />
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-
-        <!-- Notes Section -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/notesCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="0dp">
-
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
+                style="@style/BirthdaySurfaceCard">
+                <LinearLayout
+                    style="@style/BirthdayCardContent">
+                    <TextView
+                        style="@style/BirthdaySectionHeading"
+                        android:text="@string/gift_notes" />
+                    <TextView
+                        android:id="@+id/tvNotes"
+                        style="@style/BirthdaySupportingText" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCelebrate"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/notes_title"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvNotes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:textSize="14sp"
-                    android:lineSpacingExtra="4dp"
-                    tools:text="Çikolatalı pasta sever, hediye olarak kitap alınabilir." />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-</ScrollView>
+                android:layout_marginTop="8dp"
+                android:text="@string/mark_celebrated"
+                app:icon="@drawable/ic_check"
+                app:iconGravity="textStart" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMessage"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/compose_message"
+                app:icon="@drawable/ic_message"
+                app:iconGravity="textStart" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

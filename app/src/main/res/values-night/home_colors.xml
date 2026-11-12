@@ -1,0 +1,7 @@
+<resources>
+    <color name="home_background">#19161E</color>
+    <color name="home_hero">#342744</color>
+    <color name="home_on_hero">#FFF7FF</color>
+    <color name="home_hero_muted">#E8D7F7</color>
+    <color name="home_hero_divider">#685779</color>
+</resources>

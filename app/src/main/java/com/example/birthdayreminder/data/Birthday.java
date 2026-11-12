@@ -1,10 +1,17 @@
 package com.example.birthdayreminder.data;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity(tableName = "birthdays")
 public class Birthday {
+
+    public static final int ALLOWED_REMINDER_MASK = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 7);
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -20,6 +27,19 @@ public class Birthday {
     private int notifyHour;        // 0-23
     private int notifyMinute;      // 0-59
     private long createdAt;
+    @ColumnInfo(defaultValue = "0")
+    private boolean archived;
+    @ColumnInfo(defaultValue = "0")
+    private int extraReminderDays;
+    @ColumnInfo(defaultValue = "0")
+    private int celebratedYear;
+    private String reminderSchedule;
+    @ColumnInfo(defaultValue = "0")
+    private long snoozedUntil;
+    @ColumnInfo(defaultValue = "0")
+    private int snoozedYear;
+    @ColumnInfo(defaultValue = "0")
+    private long lastRegularDelivery;
 
     public Birthday(String name, int day, int month, int year, String notes,
                     String photoUri, boolean notifyEnabled, long createdAt) {
@@ -49,6 +69,35 @@ public class Birthday {
     public int getNotifyHour() { return notifyHour; }
     public int getNotifyMinute() { return notifyMinute; }
     public long getCreatedAt() { return createdAt; }
+    public boolean isArchived() { return archived; }
+    public int getExtraReminderDays() { return extraReminderDays; }
+    public int getCelebratedYear() { return celebratedYear; }
+    public String getReminderSchedule() { return reminderSchedule; }
+    public long getSnoozedUntil() { return snoozedUntil; }
+    public int getSnoozedYear() { return snoozedYear; }
+    public long getLastRegularDelivery() { return lastRegularDelivery; }
+
+    public List<ReminderSlot> reminderSlots() {
+        if (reminderSchedule != null) return ReminderSlot.decode(reminderSchedule);
+        List<ReminderSlot> slots = new ArrayList<>();
+        LocalTime time = LocalTime.of(notifyHour, notifyMinute);
+        for (int offset : ReminderSlot.DAY_OFFSETS) {
+            if ((reminderMask() & (1 << offset)) != 0) slots.add(new ReminderSlot(offset, time));
+        }
+        return slots;
+    }
+
+    public int reminderMask() { return (1 << notifyDaysBefore) | extraReminderDays; }
+
+    public void changeReminderDays(int mask) {
+        if (mask == 0 || (mask & ~ALLOWED_REMINDER_MASK) != 0) {
+            throw new IllegalArgumentException("Invalid reminder days");
+        }
+        if ((mask & (1 << notifyDaysBefore)) == 0) {
+            notifyDaysBefore = Integer.numberOfTrailingZeros(mask);
+        }
+        extraReminderDays = mask & ~(1 << notifyDaysBefore);
+    }
 
     // Setters
     public void setId(int id) { this.id = id; }
@@ -63,4 +112,11 @@ public class Birthday {
     public void setNotifyHour(int notifyHour) { this.notifyHour = notifyHour; }
     public void setNotifyMinute(int notifyMinute) { this.notifyMinute = notifyMinute; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+    public void setArchived(boolean archived) { this.archived = archived; }
+    public void setExtraReminderDays(int extraReminderDays) { this.extraReminderDays = extraReminderDays; }
+    public void setCelebratedYear(int celebratedYear) { this.celebratedYear = celebratedYear; }
+    public void setReminderSchedule(String reminderSchedule) { this.reminderSchedule = reminderSchedule; }
+    public void setSnoozedUntil(long snoozedUntil) { this.snoozedUntil = snoozedUntil; }
+    public void setSnoozedYear(int snoozedYear) { this.snoozedYear = snoozedYear; }
+    public void setLastRegularDelivery(long lastRegularDelivery) { this.lastRegularDelivery = lastRegularDelivery; }
 }

@@ -1,292 +1,234 @@
 package com.example.birthdayreminder;
 
-import android.graphics.drawable.GradientDrawable;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.birthdayreminder.data.Birthday;
+import com.example.birthdayreminder.data.BirthdayPreferences;
+import com.example.birthdayreminder.data.ReminderSlot;
 import com.example.birthdayreminder.databinding.ActivityAddEditBirthdayBinding;
+import com.example.birthdayreminder.databinding.ItemReminderSlotBinding;
 import com.example.birthdayreminder.notification.BirthdayAlarmScheduler;
+import com.example.birthdayreminder.notification.NotificationHelper;
 import com.example.birthdayreminder.util.BirthdayUtils;
 import com.example.birthdayreminder.viewmodel.BirthdayViewModel;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
 
-import java.time.Instant;
+import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.Month;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Executors;
 
 public class AddEditBirthdayActivity extends AppCompatActivity {
+    private final String[] months = Arrays.stream(Month.values())
+            .map(month -> month.getDisplayName(TextStyle.FULL_STANDALONE, Locale.forLanguageTag("tr")))
+            .toArray(String[]::new);
 
     private ActivityAddEditBirthdayBinding binding;
     private BirthdayViewModel viewModel;
-
-    private int selectedDay = 0, selectedMonth = 0, selectedYear = 0;
-    private int editBirthdayId = -1;
-    private boolean isEditMode = false;
-
-    // Notification settings
-    private int notifyDaysBefore = 1;
-    private int notifyHour = 9;
-    private int notifyMinute = 0;
-
-    // Mapping: dropdown index -> days before value
-    private final int[] daysBeforeValues = {0, 1, 2, 7};
+    private final List<ReminderSlot> slots = new ArrayList<>();
+    private BirthdayPreferences preferences;
+    private int birthdayId;
+    private boolean ready;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle state) {
+        super.onCreate(state);
+        EdgeToEdge.enable(this);
         binding = ActivityAddEditBirthdayBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        setupViewModel();
-        setupNotificationSettings();
-        checkEditMode();
-        setupListeners();
-    }
-
-    private void setupViewModel() {
+        adaptDateFields();
         viewModel = new ViewModelProvider(this).get(BirthdayViewModel.class);
-    }
+        birthdayId = getIntent().getIntExtra("birthday_id", 0);
 
-    private void setupNotificationSettings() {
-        // Setup timing dropdown
-        String[] timingOptions = {
-                getString(R.string.notify_same_day),
-                getString(R.string.notify_1_day_before),
-                getString(R.string.notify_2_days_before),
-                getString(R.string.notify_1_week_before)
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_dropdown_item_1line, timingOptions);
-        binding.actvNotifyTiming.setAdapter(adapter);
-        binding.actvNotifyTiming.setText(timingOptions[1], false); // default: 1 gün önce
-
-        binding.actvNotifyTiming.setOnItemClickListener((parent, view, position, id) -> {
-            notifyDaysBefore = daysBeforeValues[position];
-        });
-
-        // Setup time picker click
-        binding.etNotifyTime.setOnClickListener(v -> showTimePicker());
-
-        // Toggle notification settings visibility
-        binding.switchNotification.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            binding.notificationSettingsLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
-
-        // Update initial time display
-        updateTimeDisplay();
-    }
-
-    private void checkEditMode() {
-        editBirthdayId = getIntent().getIntExtra("birthday_id", -1);
-        if (editBirthdayId != -1) {
-            isEditMode = true;
-            binding.tvTitle.setText(R.string.edit_birthday);
-            loadBirthdayData();
-        }
-    }
-
-    private void loadBirthdayData() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            Birthday birthday = viewModel.getById(editBirthdayId);
-            if (birthday != null) {
-                runOnUiThread(() -> {
-                    binding.etName.setText(birthday.getName());
-                    selectedDay = birthday.getDay();
-                    selectedMonth = birthday.getMonth();
-                    selectedYear = birthday.getYear();
-                    binding.etDate.setText(BirthdayUtils.formatDate(selectedDay, selectedMonth, selectedYear));
-                    binding.etNotes.setText(birthday.getNotes());
-                    binding.switchNotification.setChecked(birthday.isNotifyEnabled());
-
-                    // Load notification settings
-                    notifyDaysBefore = birthday.getNotifyDaysBefore();
-                    notifyHour = birthday.getNotifyHour();
-                    notifyMinute = birthday.getNotifyMinute();
-
-                    // Set dropdown to correct value
-                    String[] timingOptions = {
-                            getString(R.string.notify_same_day),
-                            getString(R.string.notify_1_day_before),
-                            getString(R.string.notify_2_days_before),
-                            getString(R.string.notify_1_week_before)
-                    };
-                    int dropdownIndex = getDropdownIndex(notifyDaysBefore);
-                    binding.actvNotifyTiming.setText(timingOptions[dropdownIndex], false);
-
-                    updateTimeDisplay();
-                    updateAvatar(birthday.getName());
-
-                    // Toggle settings visibility based on switch state
-                    binding.notificationSettingsLayout.setVisibility(
-                            birthday.isNotifyEnabled() ? View.VISIBLE : View.GONE);
-                });
-            }
-        });
-    }
-
-    private int getDropdownIndex(int daysBefore) {
-        for (int i = 0; i < daysBeforeValues.length; i++) {
-            if (daysBeforeValues[i] == daysBefore) return i;
-        }
-        return 1; // default: 1 gün önce
-    }
-
-    private void setupListeners() {
+        binding.etMonth.setSimpleItems(months);
+        binding.etMonth.setOnItemClickListener((parent, view, position, id) -> binding.dateError.setVisibility(View.GONE));
         binding.btnBack.setOnClickListener(v -> finish());
+        binding.btnSave.setOnClickListener(v -> save());
+        preferences = new BirthdayPreferences(this);
+        binding.btnAddReminder.setOnClickListener(v -> editSlot(-1));
+        getSupportFragmentManager().setFragmentResultListener(ReminderEditorDialog.RESULT, this,
+                (key, result) -> saveSlot(ReminderEditorDialog.index(result), ReminderEditorDialog.slot(result)));
+        binding.notificationStatus.setOnClickListener(v ->
+                startActivity(new Intent(this, ReminderSettingsActivity.class)));
+        binding.switchNotification.setOnCheckedChangeListener((button, checked) -> showNotificationFields());
 
-        binding.etDate.setOnClickListener(v -> showDatePicker());
+        if (birthdayId != 0) binding.tvTitle.setText(R.string.edit_birthday);
+        if (state != null && state.getBoolean("ready") && state.containsKey("slots")) {
+            slots.addAll(ReminderSlot.decode(state.getString("slots")));
+            ready = true;
+        } else if (birthdayId != 0) {
+            loadBirthday();
+        } else {
+            slots.add(new ReminderSlot(1, preferences.getDefaultTime()));
+            ready = true;
+        }
+        renderSlots();
+        showNotificationFields();
+        updateSaveButton();
 
-        binding.btnSave.setOnClickListener(v -> saveBirthday());
-
-        // Live avatar update as user types name
-        binding.etName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateAvatar(s.toString());
-                binding.nameInputLayout.setError(null);
+        viewModel.getSaveState().observe(this, status -> {
+            updateSaveButton();
+            if (status == BirthdayViewModel.SaveState.SAVED) {
+                Toast.makeText(this, birthdayId == 0 ? R.string.birthday_saved : R.string.birthday_updated,
+                        Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
+            } else if (status == BirthdayViewModel.SaveState.FAILED) {
+                Toast.makeText(this, R.string.save_error, Toast.LENGTH_LONG).show();
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
         });
     }
 
-    private void updateAvatar(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            binding.tvAvatarInitial.setText("?");
-            GradientDrawable drawable = new GradientDrawable();
-            drawable.setShape(GradientDrawable.OVAL);
-            drawable.setColor(getColor(R.color.later_badge));
-            binding.avatarBackground.setBackground(drawable);
-        } else {
-            binding.tvAvatarInitial.setText(BirthdayUtils.getInitials(name));
-            int color = BirthdayUtils.getAvatarColor(name);
-            GradientDrawable drawable = new GradientDrawable();
-            drawable.setShape(GradientDrawable.OVAL);
-            drawable.setColor(color);
-            binding.avatarBackground.setBackground(drawable);
+    private void adaptDateFields() {
+        if (getResources().getConfiguration().fontScale < 1.4f
+                && getResources().getConfiguration().screenWidthDp >= 340) return;
+        binding.dateFields.setOrientation(LinearLayout.VERTICAL);
+        for (int i = 0; i < binding.dateFields.getChildCount(); i++) {
+            View child = binding.dateFields.getChildAt(i);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) child.getLayoutParams();
+            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            params.weight = 0;
+            params.setMarginStart(0);
+            child.setLayoutParams(params);
         }
     }
 
-    private void showDatePicker() {
-        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.select_date))
-                .build();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showNotificationFields();
+    }
 
-        datePicker.addOnPositiveButtonClickListener(selection -> {
-            LocalDate date = Instant.ofEpochMilli(selection)
-                    .atZone(ZoneId.of("UTC"))
-                    .toLocalDate();
-            selectedDay = date.getDayOfMonth();
-            selectedMonth = date.getMonthValue();
-            selectedYear = date.getYear();
-            binding.etDate.setText(BirthdayUtils.formatDate(selectedDay, selectedMonth, selectedYear));
-            binding.dateInputLayout.setError(null);
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        state.putBoolean("ready", ready);
+        state.putString("slots", ReminderSlot.encode(slots));
+        super.onSaveInstanceState(state);
+    }
+
+    private void loadBirthday() {
+        LiveData<Birthday> record = viewModel.observeBirthday(birthdayId);
+        record.observe(this, birthday -> {
+            record.removeObservers(this);
+            if (birthday == null) {
+                finish();
+                return;
+            }
+            binding.etName.setText(birthday.getName());
+            binding.etDay.setText(Integer.toString(birthday.getDay()));
+            binding.etMonth.setText(months[birthday.getMonth() - 1], false);
+            if (birthday.getYear() != 0) binding.etYear.setText(Integer.toString(birthday.getYear()));
+            binding.etNotes.setText(birthday.getNotes());
+            slots.addAll(birthday.reminderSlots());
+            slots.sort(ReminderSlot.ORDER);
+            renderSlots();
+            binding.switchNotification.setChecked(birthday.isNotifyEnabled());
+            ready = true;
+            showNotificationFields();
+            updateSaveButton();
         });
-
-        datePicker.show(getSupportFragmentManager(), "DATE_PICKER");
     }
 
-    private void showTimePicker() {
-        MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(notifyHour)
-                .setMinute(notifyMinute)
-                .setTitleText(getString(R.string.notify_time_label))
-                .build();
-
-        timePicker.addOnPositiveButtonClickListener(v -> {
-            notifyHour = timePicker.getHour();
-            notifyMinute = timePicker.getMinute();
-            updateTimeDisplay();
-        });
-
-        timePicker.show(getSupportFragmentManager(), "TIME_PICKER");
+    private void editSlot(int index) {
+        ReminderSlot slot = index < 0 ? new ReminderSlot(0, preferences.getDefaultTime()) : slots.get(index);
+        ReminderEditorDialog.create(index, slot).show(getSupportFragmentManager(), ReminderEditorDialog.RESULT);
     }
 
-    private void updateTimeDisplay() {
-        String timeText = String.format(Locale.getDefault(), "%02d:%02d", notifyHour, notifyMinute);
-        binding.etNotifyTime.setText(timeText);
+    private void saveSlot(int index, ReminderSlot slot) {
+        int existing = slots.indexOf(slot);
+        if (existing >= 0 && existing != index) {
+            binding.reminderError.setText(R.string.duplicate_reminder_slot);
+            binding.reminderError.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (index < 0) slots.add(slot);
+        else slots.set(index, slot);
+        slots.sort(ReminderSlot.ORDER);
+        renderSlots();
     }
 
-    private void saveBirthday() {
-        String name = binding.etName.getText() != null ? binding.etName.getText().toString().trim() : "";
-        String notes = binding.etNotes.getText() != null ? binding.etNotes.getText().toString().trim() : "";
-        boolean notify = binding.switchNotification.isChecked();
+    private void renderSlots() {
+        binding.reminderError.setVisibility(View.GONE);
+        binding.reminderSlots.removeAllViews();
+        for (int i = 0; i < slots.size(); i++) {
+            int index = i;
+            ItemReminderSlotBinding row = ItemReminderSlotBinding.inflate(getLayoutInflater(), binding.reminderSlots, false);
+            String label = BirthdayUtils.reminderSlotLabel(this, slots.get(index));
+            row.editSlot.setText(label);
+            row.editSlot.setOnClickListener(view -> editSlot(index));
+            row.removeSlot.setContentDescription(getString(R.string.remove_reminder_slot, label));
+            row.removeSlot.setOnClickListener(view -> {
+                slots.remove(index);
+                renderSlots();
+            });
+            binding.reminderSlots.addView(row.getRoot());
+        }
+    }
 
-        // Validation
+    private void showNotificationFields() {
+        binding.notificationSettingsLayout.setVisibility(binding.switchNotification.isChecked() ? View.VISIBLE : View.GONE);
+        boolean available = NotificationHelper.isAvailable(this);
+        boolean exact = BirthdayAlarmScheduler.canScheduleExactly(this);
+        binding.notificationStatus.setText(available ? R.string.approximate_notification : R.string.notifications_blocked);
+        binding.notificationStatus.setVisibility(available && exact ? View.GONE : View.VISIBLE);
+    }
+
+    private void updateSaveButton() {
+        BirthdayViewModel.SaveState state = viewModel.getSaveState().getValue();
+        binding.btnSave.setEnabled(ready && (state == null || state == BirthdayViewModel.SaveState.FAILED));
+    }
+
+    private void save() {
+        String name = binding.etName.getText().toString().trim();
         if (name.isEmpty()) {
             binding.nameInputLayout.setError(getString(R.string.name_required));
+            binding.etName.requestFocus();
             return;
         }
-        if (selectedDay == 0) {
-            binding.dateInputLayout.setError(getString(R.string.date_required));
+        binding.nameInputLayout.setError(null);
+        int day, year;
+        int month = Arrays.asList(months).indexOf(binding.etMonth.getText().toString()) + 1;
+        String yearText = binding.etYear.getText().toString();
+        try {
+            day = Integer.parseInt(binding.etDay.getText().toString());
+            year = yearText.isEmpty() ? 0 : Integer.parseInt(yearText);
+            if (year == 0 && !yearText.isEmpty()) throw new DateTimeException("Invalid year");
+            LocalDate.of(year == 0 ? 2000 : year, month, day);
+        } catch (DateTimeException | NumberFormatException e) {
+            binding.dateError.setText(R.string.invalid_birthday_date);
+            binding.dateError.setVisibility(View.VISIBLE);
+            return;
+        }
+        binding.dateError.setVisibility(View.GONE);
+        boolean enabled = binding.switchNotification.isChecked();
+        if (enabled && slots.isEmpty()) {
+            binding.reminderError.setText(R.string.reminder_slot_required);
+            binding.reminderError.setVisibility(View.VISIBLE);
             return;
         }
 
-        if (isEditMode) {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                Birthday birthday = viewModel.getById(editBirthdayId);
-                if (birthday != null) {
-                    birthday.setName(name);
-                    birthday.setDay(selectedDay);
-                    birthday.setMonth(selectedMonth);
-                    birthday.setYear(selectedYear);
-                    birthday.setNotes(notes);
-                    birthday.setNotifyEnabled(notify);
-                    birthday.setNotifyDaysBefore(notifyDaysBefore);
-                    birthday.setNotifyHour(notifyHour);
-                    birthday.setNotifyMinute(notifyMinute);
-                    viewModel.update(birthday);
-
-                    // Schedule or cancel alarm
-                    if (notify) {
-                        BirthdayAlarmScheduler.scheduleAlarm(this, birthday);
-                    } else {
-                        BirthdayAlarmScheduler.cancelAlarm(this, birthday.getId());
-                    }
-
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, R.string.birthday_updated, Toast.LENGTH_SHORT).show();
-                        setResult(RESULT_OK);
-                        finish();
-                    });
-                }
-            });
-        } else {
-            Birthday birthday = new Birthday(name, selectedDay, selectedMonth, selectedYear,
-                    notes, null, notify, System.currentTimeMillis());
-            birthday.setNotifyDaysBefore(notifyDaysBefore);
-            birthday.setNotifyHour(notifyHour);
-            birthday.setNotifyMinute(notifyMinute);
-
-            viewModel.insert(birthday, id -> {
-                birthday.setId(id);
-                if (notify) {
-                    BirthdayAlarmScheduler.scheduleAlarm(this, birthday);
-                }
-                runOnUiThread(() -> {
-                    Toast.makeText(this, R.string.birthday_saved, Toast.LENGTH_SHORT).show();
-                    setResult(RESULT_OK);
-                    finish();
-                });
-            });
+        String notes = binding.etNotes.getText().toString().trim();
+        Birthday birthday = new Birthday(name, day, month, year, notes, null, enabled, System.currentTimeMillis());
+        birthday.setId(birthdayId);
+        birthday.setReminderSchedule(ReminderSlot.encode(slots));
+        if (!slots.isEmpty()) {
+            ReminderSlot first = slots.get(0);
+            birthday.setNotifyDaysBefore(first.daysBefore);
+            birthday.setNotifyHour(first.time.getHour());
+            birthday.setNotifyMinute(first.time.getMinute());
         }
+        viewModel.save(birthday);
     }
 }
-
