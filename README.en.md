@@ -4,7 +4,7 @@
 
 Birthday Reminder is an offline Android app for keeping track of upcoming birthdays. Set a separate reminder schedule for each person, keep gift notes, and move your records between devices with a JSON backup.
 
-[Latest release and APK](https://github.com/KaanKaya17/BirthdayReminder/releases/latest)
+[**Download for Android**](https://github.com/KaanKaya17/BirthdayReminder/releases/latest) · [Reminders, widget, and backups](#reminders-widget-and-backups)
 
 <img src="docs/screenshots/home-en.png" width="250" alt="Birthday Reminder home screen in English"> <img src="docs/screenshots/app-language.png" width="250" alt="App language picker with System default, English, and Türkçe">
 
@@ -25,14 +25,18 @@ Birthday Reminder is an offline Android app for keeping track of upcoming birthd
 3. Open **Reminder settings** to allow notifications. Use **Send test notification** to check your settings.
 4. Use **Open exact alarm settings** if you want reminders closer to the chosen time. Android may deliver them later when exact alarms are off.
 
-**Updating.** Version 1.5 supports in-place upgrades from earlier official GitHub APKs. Install it over your current version to keep your birthdays. If you built an APK with a different signing key, export and verify a JSON backup before switching installations. Use **Restore from backup** in the signed release to bring your birthdays back.
+**Updating.** Official GitHub APKs support in-place upgrades, including the signing key transition introduced in version 1.5. Install it over your current version to keep your birthdays. If you built an APK with a different signing key, export and verify a JSON backup before switching installations. Use **Restore from backup** in the signed release to bring your birthdays back.
 
 ## Reminders, widget, and backups
 
 - Open a birthday and choose **Edit → Add reminder**. Pick a day and time and repeat to add more reminders.
 - Open **Backup → Reminder settings → Add widget to home screen**. Supported Android launchers will offer to pin the widget.
 - Open **Backup → Create backup file** to export active and archived birthdays, notes, reminder schedules, and celebration status.
-- Open **Backup → Restore from backup** and select a JSON file. Review the preview and confirm. The app adds new birthdays and keeps existing records.
+- Open **Backup → Restore from backup** and select a JSON file. Review the preview and confirm. The app adds new birthdays and keeps existing records. A backup entry with different notes or reminder settings may be added as a separate record.
+
+## If a notification is missing
+
+Under **Backup → Reminder settings**, check notification permission and send a test notification. If the test arrives but a scheduled reminder runs late, check exact alarm permission. Confirm that the birthday remains active and its details show an upcoming reminder.
 
 ## Data and privacy
 

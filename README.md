@@ -4,7 +4,7 @@
 
 Android için Türkçe ve İngilizce kullanılabilen çevrimdışı doğum günü hatırlatıcısı. Yaklaşan tarihleri gör, her kişi için kendi bildirim planını oluştur ve kayıtlarını bir JSON dosyasıyla taşı.
 
-[Son sürüm ve APK](https://github.com/KaanKaya17/BirthdayReminder/releases/latest)
+[**Android için indir**](https://github.com/KaanKaya17/BirthdayReminder/releases/latest) · [Bildirim planı, widget ve yedekleme](#bildirim-planı-widget-ve-yedekleme)
 
 <img src="docs/screenshots/home.png" width="250" alt="Açık temada doğum günleri ana ekranı"> <img src="docs/screenshots/reminder-plan.png" width="250" alt="Aynı gün için iki farklı saat içeren hatırlatma planı">
 
@@ -25,14 +25,18 @@ Android için Türkçe ve İngilizce kullanılabilen çevrimdışı doğum gün�
 3. Kurulumdan sonra **Hatırlatma ayarları** üzerinden bildirim iznini ver. **Test bildirimi gönder** ile kontrol edebilirsin.
 4. Seçtiğin saate daha yakın bildirim için **Kesin alarm ayarını aç** seçeneğini kullan. Android, kesin alarm izni kapalıyken bildirimi daha geç gösterebilir.
 
-**Güncelleme.** 1.5, önceki resmî GitHub APK'larından yerinde geçişi destekler. Mevcut sürümü kaldırmadan yeni APK'yı üzerine yükle. Kendi derlediğin bir APK farklı bir anahtarla imzalandıysa önce mevcut uygulamadan JSON yedeği al. Yedek dosyasını doğruladıktan sonra imzalı sürümü kurup **Yedekten geri yükle** seçeneğini kullan.
+**Güncelleme.** Resmî GitHub APK’ları, 1.5 sürümüyle gelen imza geçişi desteği sayesinde mevcut kurulumun üzerine yüklenebilir. Mevcut sürümü kaldırmadan yeni APK'yı üzerine yükle. Kendi derlediğin bir APK farklı bir anahtarla imzalandıysa önce mevcut uygulamadan JSON yedeği al. Yedek dosyasını doğruladıktan sonra imzalı sürümü kurup **Yedekten geri yükle** seçeneğini kullan.
 
 ## Bildirim planı, widget ve yedekleme
 
 - Bir kayıt açıp **Düzenle → Hatırlatma ekle** yolunu izle. Gün ve saat seç. Farklı saatler için işlemi tekrarla. Kayıt detayında planı ve sıradaki bildirimi görebilirsin.
 - **Yedek → Hatırlatma ayarları → Ana ekrana widget ekle** yolunu izle. Desteklenen Android başlatıcılarında widget doğrudan ana ekrana eklenebilir.
 - **Yedek → Yedek dosyası oluştur** ile etkin ve arşivlenmiş kayıtları, notları, bildirim planlarını ve kutlama durumunu dışa aktar.
-- **Yedek → Yedekten geri yükle** ile bir JSON dosyası seç. Önizlemeyi onayladığında uygulama yeni kayıtları ekler ve mevcut kayıtları korur. Önceki JSON yedek biçimleri de okunur.
+- **Yedek → Yedekten geri yükle** ile bir JSON dosyası seç. Önizlemeyi onayladığında uygulama yeni kayıtları ekler ve mevcut kayıtları korur. Önceki JSON yedek biçimleri de okunur. Aynı kişinin notları veya bildirim planı yedektekinden farklıysa yedekteki kayıt ayrıca eklenebilir.
+
+## Bildirim gelmiyorsa
+
+**Yedek → Hatırlatma ayarları** bölümünden bildirim iznini kontrol et ve bir test bildirimi gönder. Test bildirimi geliyor ancak planlanan hatırlatma gecikiyorsa kesin alarm iznini kontrol et. Doğum günü kaydının etkin olduğunu ve detayında bir sonraki bildirimin göründüğünü doğrula.
 
 ## Veri ve gizlilik
 
