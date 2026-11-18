@@ -63,3 +63,7 @@ macOS ve Linux'ta aynı Gradle görevlerini `./gradlew` ile çalıştırabilirsi
 - **`widget/`** yaklaşan doğum günleri için Android ana ekran widget'ı
 
 [Sürüm geçmişi](https://github.com/KaanKaya17/BirthdayReminder/releases)
+
+## Lisans
+
+MIT. Ayrıntılar için [LICENSE](LICENSE) dosyasına bak.

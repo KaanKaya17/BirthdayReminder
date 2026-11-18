@@ -63,3 +63,7 @@ On macOS and Linux, run the same Gradle tasks with `./gradlew`. [Build and sign 
 - **`widget/`** upcoming birthdays on the Android home screen
 
 [Release history](https://github.com/KaanKaya17/BirthdayReminder/releases)
+
+## License
+
+MIT. See [LICENSE](LICENSE) for details.
